@@ -20,13 +20,9 @@ namespace BehaviorTree
                 return;
             }
 
-            if (decoratorNode.ChildNode.Status == NodeStatus.SUCCESS)
-            {
-                decoratorNode.Status = NodeStatus.ERROR;
-                return;
-            }
-
-            if (decoratorNode.ChildNode.Status == NodeStatus.FAILED)
+            if (decoratorNode.ChildNode.Status == NodeStatus.SUCCESS)          
+                decoratorNode.Status = NodeStatus.SUCCESS;
+            else if (decoratorNode.ChildNode.Status == NodeStatus.FAILED)
                 decoratorNode.ChildNode.OnReset();
         }
     }
