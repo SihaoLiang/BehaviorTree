@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BehaviorTreeData
+{
+    public partial class NodeData : Binary
+    {
+        public int ID;
+        public string ClassType;
+        public List<BaseField> Fields = new List<BaseField>();
+        public List<NodeData> Childs = null;
+
+        public override void Read(ref Reader reader)
+        {
+            reader.Read(ref ID).Read(ref ClassType).Read(ref Fields).Read(ref Childs);
+        }
+
+        public override void Write(ref Writer writer)
+        {
+            writer.Write(ID).Write(ClassType).Write(Fields).Write(Childs);
+        }
+
+        public BaseField this[string fieldName]
+        {
+            get
+            {
+                for (int i = 0; i < Fields.Count; i++)
+                {
+                    BaseField field = Fields[i];
+                    if (field == null)
+                        continue;
+                    if (field.FieldName == fieldName)
+                        return field;
+                }
+
+                return null;
+            }
+        }
+    }
+}
