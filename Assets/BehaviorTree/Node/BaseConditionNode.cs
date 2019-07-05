@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BehaviorTree
 {
-    public abstract class BaseConditionNode : BaseActionNode
+    public class BaseConditionNode : BaseActionNode
     {
     }
 }

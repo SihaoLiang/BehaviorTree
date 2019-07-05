@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace BehaviorTree
 {
+    /// <summary>
+    /// 代理器类型
+    /// </summary>
     public class NodeProxyInfo
     {
         public string ClassType;

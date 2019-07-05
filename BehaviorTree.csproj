@@ -254,6 +254,7 @@
     <Compile Include="Assets\BehaviorTree\Attribute\AgentProxyAttribute.cs" />
     <Compile Include="Assets\BehaviorTree\Attribute\NodeAttribute.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTree.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeConst.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\AgentData.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\BaseField.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\BooleanField.cs" />
@@ -269,8 +270,14 @@
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\RepeatIntField.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\RepeatLongField.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\RepeatStringField.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\RepeatVector2Field.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\RepeatVector3Field.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\StringField.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\TreeData.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\Vector2.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\Vector2Field.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\Vector3.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\Vector3Field.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\DataUtility.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Binary.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Reader.cs" />
@@ -315,6 +322,7 @@
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeLuaProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeProxyInfo.cs" />
+    <Compile Include="Assets\Custom\AgentProxy\GuideAgentProxy.cs" />
     <Compile Include="Assets\ECS\ArrayHelper.cs" />
     <Compile Include="Assets\ECS\ComponentFactory.cs" />
     <Compile Include="Assets\ECS\ECS_Component.cs" />

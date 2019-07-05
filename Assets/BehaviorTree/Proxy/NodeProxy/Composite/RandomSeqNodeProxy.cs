@@ -17,7 +17,7 @@ namespace BehaviorTree
             CompositeNode = Node as BaseCompositeNode;
             for (int index = 0; index < CompositeNode.Children.Count; index++)
             {
-                Children[index] = CompositeNode.Children[index];
+                Children.Add(CompositeNode.Children[index]);
             }
         }
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BehaviorTree
 {
-    public abstract class BaseDecoratorNode : BaseInheritNode
+    public class BaseDecoratorNode : BaseInheritNode
     {
         public BaseNode ChildNode = null;
         public override void AddNode(BaseNode node)

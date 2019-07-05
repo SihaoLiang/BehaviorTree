@@ -8,6 +8,11 @@ namespace BehaviorTree
     public abstract class BaseNode
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        public int Id;
+
+        /// <summary>
         /// 节点数据
         /// </summary>
         public NodeData NodeDatas;
@@ -37,9 +42,43 @@ namespace BehaviorTree
         /// </summary>
         public void InitNode(NodeData nodeData,Agent agent)
         {
+            Id = NodeDatas.ID;
             NodeAgent = agent;
             NodeDatas = nodeData;
             InitProxy();
+        }
+
+        public static BaseNode GetBaseNode(string classType)
+        {
+            BaseNode baseNode = null;
+
+            NodeProxyInfo nodeProxy = BehaviorTreeManager.Instance.GetRegistedNodeType(classType);
+            if (nodeProxy == null)
+            {
+                Debug.LogError($"错误！！行为树节点未注册 ClassType:{classType}");
+                return null;
+            }
+
+            switch (nodeProxy.behaviorNodeType)
+            {
+                case BehaviorNodeType.Action:
+                    baseNode = new BaseActionNode();
+                    break;
+                case BehaviorNodeType.Condition:
+                    baseNode = new BaseConditionNode();
+                    break;
+                case BehaviorNodeType.Composite:
+                    baseNode = new BaseCompositeNode();
+                    break;
+                case BehaviorNodeType.Decorator:
+                    baseNode = new BaseDecoratorNode();
+                    break;
+                default:
+                    Debug.LogError($"错误！！行为树节点类型错误 ClassType:{classType}");
+                    break;
+            }
+
+            return baseNode;
         }
 
         /// <summary>
@@ -81,12 +120,13 @@ namespace BehaviorTree
         /// </summary>
         public virtual void OnEnable()
         {
-            if (Proxy != null && Proxy.Events != null)
+            string[] events = OnGetEvents();
+            if (events != null && events != null)
             {
-                for (int i = 0; i < Proxy.Events.Length; i++)
+                for (int i = 0; i < events.Length; i++)
                 {
-                    string evt = Proxy.Events[i];
-                    XGameEventManager.Instance.RegisterEvent(evt, Proxy.OnNotify);
+                    string evt = events[i];
+                    XGameEventManager.Instance.RegisterEvent(evt, OnNotify);
                 }
             }
 
@@ -134,8 +174,6 @@ namespace BehaviorTree
             if(Status == NodeStatus.RUNNING)
                 Proxy?.OnUpdate(deltaTime);
 
- 
-
             if (Status == NodeStatus.SUCCESS || Status == NodeStatus.FAILED)
                 OnDisable();
         }
@@ -158,10 +196,20 @@ namespace BehaviorTree
             Proxy?.OnDisable();
         }
 
+        public virtual string[] OnGetEvents()
+        {
+            return Proxy?.Events;
+        }
+
 
         public virtual void OnDestroy()
         {
             Proxy?.OnDestroy();
+        }
+
+        public virtual void OnNotify(string evt, params object[] args)
+        {
+            Proxy?.OnNotify(evt, args);
         }
     }
 }

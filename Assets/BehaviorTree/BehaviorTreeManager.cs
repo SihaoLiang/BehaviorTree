@@ -5,24 +5,8 @@ using BehaviorTreeData;
 using System;
 namespace BehaviorTree
 {
-    public class BehaviorTreeManager
+    public class BehaviorTreeManager : XSingleton<BehaviorTreeManager>
     {
-        protected static BehaviorTreeManager instance = null;
-
-        public static BehaviorTreeManager Instance
-        {
-            get
-            {
-                if (instance != null)
-                {
-                    return instance;
-                }
-
-                instance = new BehaviorTreeManager();
-                return instance;
-            }
-        }
-
         /// <summary>
         /// 所有行为树数据
         /// </summary>
@@ -31,12 +15,8 @@ namespace BehaviorTree
         /// <summary>
         /// 节点代理的所有类型
         /// </summary>
-        private readonly Dictionary<string, Type> NodeProxyTypeDic = new Dictionary<string, Type>();
-
-        /// <summary>
-        /// 节点代理的所有类型
-        /// </summary>
-        private readonly Dictionary<string, NodeProxyInfo> RegistedNodeProxyTypeDic = new Dictionary<string, NodeProxyInfo>();
+        private readonly Dictionary<string, NodeProxyInfo> RegistedCsNodeProxyTypeDic = new Dictionary<string, NodeProxyInfo>();
+        private readonly Dictionary<string, NodeProxyInfo> RegistedLuaNodeProxyTypeDic = new Dictionary<string, NodeProxyInfo>();
 
         /// <summary>
         /// 执行代理的所有类型
@@ -55,8 +35,15 @@ namespace BehaviorTree
         public bool Init()
         {
             InitTypes();
+            Load();
 
             return true;
+        }
+
+
+        public void Load()
+        {
+
         }
 
         /// <summary>
@@ -88,28 +75,25 @@ namespace BehaviorTree
                 return null;
             }
 
-            AgentData agentData = AgentDataDic[id];
+            AgentData agentData = AgentDataDic[id].Clone();
 
             if (agentData == null)
                 return null;
-
-            //todo Copy
 
             BehaviorTree behaviorTree = new BehaviorTree(agentData);
             behaviorTree.BehaviorTreeId = id.ToString();
             return behaviorTree;
         }
 
-
         /// <summary>
-        /// 注册节点
+        /// 注册Cs节点代理
         /// </summary>
         /// <param name="classType">节点名字，唯一</param>
         /// <param name="nodeType">节点类型</param>
         /// <param name="isLua">Lua节点</param>
-        public void RegistNode(string classType,BehaviorNodeType nodeType,bool isLua)
+        public void RegistCsProxy(string classType,BehaviorNodeType nodeType,bool isLua)
         {
-            if (RegistedNodeProxyTypeDic.ContainsKey(classType))
+            if (RegistedCsNodeProxyTypeDic.ContainsKey(classType))
             {
                 Debug.LogError($"错误:重复注册行为树节点 ClassType:{classType} BehaviorNodeType:{nodeType}");
                 return;
@@ -120,7 +104,29 @@ namespace BehaviorTree
             nodeProxyInfo.behaviorNodeType = nodeType;
             nodeProxyInfo.IsLua = isLua;
 
-            RegistedNodeProxyTypeDic.Add(classType, nodeProxyInfo);
+            RegistedCsNodeProxyTypeDic.Add(classType, nodeProxyInfo);
+        }
+
+        /// <summary>
+        /// 注册Lua节点代理
+        /// </summary>
+        /// <param name="classType">节点名字，唯一</param>
+        /// <param name="nodeType">节点类型</param>
+        /// <param name="isLua">Lua节点</param>
+        public void RegistLuaProxy(string classType, BehaviorNodeType nodeType, bool isLua)
+        {
+            if (RegistedCsNodeProxyTypeDic.ContainsKey(classType))
+            {
+                Debug.LogError($"错误:重复注册行为树节点 ClassType:{classType} BehaviorNodeType:{nodeType}");
+                return;
+            }
+
+            NodeProxyInfo nodeProxyInfo = new NodeProxyInfo();
+            nodeProxyInfo.ClassType = classType;
+            nodeProxyInfo.behaviorNodeType = nodeType;
+            nodeProxyInfo.IsLua = isLua;
+
+            RegistedCsNodeProxyTypeDic.Add(classType, nodeProxyInfo);
         }
 
         /// <summary>
@@ -141,7 +147,7 @@ namespace BehaviorTree
                         continue;
 
                     NodeTypeDic[nodeAttribute.ClassType] = type;
-                    RegistNode(nodeAttribute.ClassType, nodeAttribute.NodeType, false);
+                    RegistCsProxy(nodeAttribute.ClassType, nodeAttribute.NodeType, false);
                 }
 
                 object[] agentAttributes = type.GetCustomAttributes(typeof(AgentProxyAttribute), false);
@@ -160,12 +166,16 @@ namespace BehaviorTree
         /// <summary>
         /// 获取已经注册的代理器Type
         /// </summary>
-        /// <param name="uiName">UI名字</param>
+        /// <param name="nodeType">代理名字</param>
         /// <returns></returns>
         public NodeProxyInfo GetRegistedNodeType(string nodeType)
         {
             NodeProxyInfo nodeProxyInfo = null;
-            RegistedNodeProxyTypeDic.TryGetValue(nodeType, out nodeProxyInfo);
+            RegistedLuaNodeProxyTypeDic.TryGetValue(nodeType, out nodeProxyInfo);
+            if (nodeProxyInfo != null)
+                return nodeProxyInfo;
+
+            RegistedCsNodeProxyTypeDic.TryGetValue(nodeType, out nodeProxyInfo);
             return nodeProxyInfo;
         }
 
@@ -180,7 +190,6 @@ namespace BehaviorTree
             AgentProxyTypeDic.TryGetValue(nodeType, out type);
             return type;
         }
-
 
         /// <summary>
         /// 获取在C#端对应的行为树节点

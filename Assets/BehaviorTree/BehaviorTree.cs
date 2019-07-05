@@ -89,7 +89,6 @@ namespace BehaviorTree {
             return parentNode;
         }
 
-
         /// <summary>
         /// 创建节点
         /// </summary>
@@ -98,18 +97,7 @@ namespace BehaviorTree {
         public BaseNode InstanceBehaviorTreeNodeByData(NodeData nodeData)
         {
             string nodeType = nodeData.ClassType;
-            BaseNode baseNode = null;
-
-            switch (nodeType)
-            {
-                case "Parallel":
-                    baseNode = new BaseCompositeNode();
-                    break;
-
-                case "Action":
-                    baseNode = new BaseActionNode();
-                    break;
-            }
+            BaseNode baseNode = BaseNode.GetBaseNode(nodeData.ClassType);
             baseNode.InitNode(nodeData, BehaviorAgent);
             return baseNode;
         }
