@@ -55,15 +55,14 @@ namespace BehaviorTreeData
 
             nodeData.ID = source.ID;
             nodeData.ClassType = source.ClassType;
-            nodeData.ClassName = source.ClassName;
 
-            List<BaseField> fileds = source.Fileds;
+            List<BaseField> fileds = source.Fields;
             if (fileds != null && fileds.Count > 0)
             {
-                nodeData.Fileds = new List<BaseField>(fileds.Count);
+                nodeData.Fields = new List<BaseField>(fileds.Count);
                 for (int index = 0; index < fileds.Count; index++)
                 {
-                    nodeData.Fileds.Add(fileds[index].Clone());
+                    nodeData.Fields.Add(fileds[index].Clone());
                 }
             }
 

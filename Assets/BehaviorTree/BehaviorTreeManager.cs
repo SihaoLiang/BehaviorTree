@@ -29,12 +29,20 @@ namespace BehaviorTree
         private readonly Dictionary<string, Type> NodeTypeDic = new Dictionary<string, Type>();
 
         /// <summary>
+        /// 行为树池
+        /// </summary>
+        BehaviorTreePool Pools = null;
+
+        /// <summary>
         /// 初始化从本地加载数据
         /// </summary>
         /// <returns></returns>
         public bool Init()
         {
             InitTypes();
+            Pools = Activator.CreateInstance<BehaviorTreePool>();
+            Pools.name = "BehaviorTreePool";
+
             Load();
 
             return true;
@@ -62,12 +70,40 @@ namespace BehaviorTree
             return AgentDataDic.ContainsKey(id);
         }
 
+
+        /// <summary>
+        /// 从池中获取行为树
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public BehaviorTree GetBehaviorTreeFromPool(string id)
+        {
+            if (Pools == null)
+            {
+                Pools = Activator.CreateInstance<BehaviorTreePool>();
+                Pools.name = "BehaviorTreePool";
+            }
+
+            return Pools.Spawn(id);
+        }
+
+        public void DisableBehaviorTree(BehaviorTree behaviorTree) {
+            if (Pools == null)
+            {
+                Pools = Activator.CreateInstance<BehaviorTreePool>();
+                Pools.name = "BehaviorTreePool";
+            }
+
+            behaviorTree.OnDisable();
+            Pools.DeSpawn(behaviorTree);
+        }
+
         /// <summary>
         /// 获取行为树
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public BehaviorTree GetBehaviorTreeById(string id)
+        public BehaviorTree GetBehaviorTreeById(string id,Agent agent)
         {
             if (!CheckBehaviorTreeDataExist(id))
             {
@@ -75,13 +111,24 @@ namespace BehaviorTree
                 return null;
             }
 
-            AgentData agentData = AgentDataDic[id].Clone();
+            //从池里面加载
+            BehaviorTree behaviorTree = GetBehaviorTreeFromPool(id);
+            if (behaviorTree == null)
+            {
+                AgentData agentData = AgentDataDic[id].Clone();
 
-            if (agentData == null)
-                return null;
+                if (agentData == null)
+                {
+                    Debug.LogError($"错误！行为树数据不存在 Id:{id}");
+                    return null;
+                }
 
-            BehaviorTree behaviorTree = new BehaviorTree(agentData);
-            behaviorTree.BehaviorTreeId = id.ToString();
+                behaviorTree = new BehaviorTree(agentData, agent);
+                behaviorTree.BehaviorTreeId = agentData.ID;
+                behaviorTree.OnAwake();
+            }
+
+            behaviorTree.OnEnable();
             return behaviorTree;
         }
 
@@ -91,7 +138,7 @@ namespace BehaviorTree
         /// <param name="classType">节点名字，唯一</param>
         /// <param name="nodeType">节点类型</param>
         /// <param name="isLua">Lua节点</param>
-        public void RegistCsProxy(string classType,BehaviorNodeType nodeType,bool isLua)
+        public void RegistCsProxy(string classType, BehaviorNodeType nodeType, bool isLua)
         {
             if (RegistedCsNodeProxyTypeDic.ContainsKey(classType))
             {

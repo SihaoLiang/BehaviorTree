@@ -2,26 +2,119 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ECS;
-public abstract class AgentProxy : Entity
+using BehaviorTreeData;
+
+namespace BehaviorTree
 {
-    public GameObject Agent = null;
-    public string[] Events = null;
-    public abstract void OnStart();
+    public class AgentProxy : Entity
+    {
+        public Agent BTAgent = null;
 
-    public abstract void OnAwake();
+        public GameObject gameObject
+        {
+            get {
+                if (BTAgent != null)
+                    return BTAgent.gameObject;
+                return null;
+            }
+        }
+   
+        protected BehaviorTree BTree
+        {
+            get
+            {
+                if (BTAgent != null)
+                    return BTAgent.BTree;
+                return null;
+            }
+        }
+        /// <summary>
+        /// 公共参数
+        /// </summary>
+        public Dictionary<string, BaseField> VarDic;
+        public List<string> Events = new List<string>();
+        
+        public virtual void OnStart() {
+           
+        }
 
-    public abstract void OnEnable();
+        public virtual void OnAwake()
+        {
+            BTree?.OnAwake();
+        }
 
-    public abstract void OnDisable();
+        public virtual void OnEnable() { }
 
-    public abstract void OnDestroy();
+        public virtual void OnDisable() { }
 
-    public abstract void OnUpdate(float dedeltaTime);
+        public virtual void OnDestroy()
+        {
+            BTree?.OnDestroy();
+        }
 
-    public abstract void OnFixedUpdate(float dedeltaTime);
+        public virtual void OnUpdate(float dedeltaTime)
+        {
+            BTree?.OnUpdate(dedeltaTime);
+        }
 
-    public abstract string[] OnGetEvents();
+        public virtual void OnFixedUpdate(float dedeltaTime)
+        {
+            BTree?.OnFixedUpdate(dedeltaTime);
+        }
 
-    public abstract void OnNotify(string evt, params object[] args);
+        public virtual List<string> OnGetEvents()
+        {
+            return Events;
+        }
 
+        public virtual void OnNotify(string evt, params object[] args) { }
+
+        /// <summary>
+        /// 获取公共参数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public BaseField GetVarDicByKey(string key)
+        {
+            if (VarDic == null || !VarDic.ContainsKey(key))
+                return null;
+
+            return VarDic[key];
+        }
+
+        /// <summary>
+        /// 设置公共参数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="baseFiled"></param>
+        public void SetVarDicByKey(string key, BaseField baseFiled)
+        {
+            if (VarDic == null)
+                VarDic = new Dictionary<string, BaseField>(8);
+
+            if (!VarDic.ContainsKey(key))
+                VarDic.Add(key, baseFiled);
+            else
+                VarDic[key] = baseFiled;
+        }
+
+        public void AddEvent(string evt)
+        {
+            if (Events == null)
+                Events = new List<string>();
+
+            if (!Events.Contains(evt))
+                Events.Add(evt);
+        }
+
+
+        public void RemoveEvent(string evt)
+        {
+            if (Events == null)
+                Events = new List<string>();
+
+            if (Events.Contains(evt))
+                Events.Remove(evt);
+        }
+    }
 }

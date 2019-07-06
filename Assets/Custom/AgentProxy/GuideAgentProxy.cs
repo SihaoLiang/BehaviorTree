@@ -4,8 +4,6 @@ using UnityEngine;
 using BehaviorTree;
 
 [AgentProxy("Guide")]
-
-
 public class GuideAgentProxy : AgentCsProxy
 {
     public enum UpdateMode
@@ -19,7 +17,13 @@ public class GuideAgentProxy : AgentCsProxy
 
     public override void OnUpdate(float dedeltaTime)
     {
-        base.OnUpdate(dedeltaTime);
+        if(BehaviorUpdateMode == UpdateMode.Normal)
+            base.OnUpdate(dedeltaTime);
     }
 
+
+    public override void OnNotify(string evt, params object[] args)
+    {
+        
+    }
 }

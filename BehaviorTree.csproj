@@ -12,13 +12,16 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.4.20f2</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -284,6 +287,7 @@
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Serializer.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Writer.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeManager.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreePool.cs" />
     <Compile Include="Assets\BehaviorTree\Node\BaseActionNode.cs" />
     <Compile Include="Assets\BehaviorTree\Node\BaseCompositeNode.cs" />
     <Compile Include="Assets\BehaviorTree\Node\BaseConditionNode.cs" />
@@ -307,8 +311,7 @@
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Composite\RateSelectorNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Composite\SelectorNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Composite\SequenceNodeProxy.cs" />
-    <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Condition\EqualNodeProxy.cs" />
-    <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Condition\NotEqualNodeProxy.cs" />
+    <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Condition\CompareNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Decorator\FailureNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Decorator\FramesNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Decorator\LogNodeProxy.cs" />
@@ -323,6 +326,11 @@
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeProxyInfo.cs" />
     <Compile Include="Assets\Custom\AgentProxy\GuideAgentProxy.cs" />
+    <Compile Include="Assets\Custom\NodeProxy\Guide\FocusOnUINodeProxy.cs" />
+    <Compile Include="Assets\Custom\NodeProxy\Guide\FoucasOnNodeProy.cs" />
+    <Compile Include="Assets\Custom\NodeProxy\Guide\GuideDailogNodeProxy.cs" />
+    <Compile Include="Assets\Custom\NodeProxy\Guide\OpenUINodeProxy.cs" />
+    <Compile Include="Assets\Custom\NodeProxy\Guide\WaitForEventNodeProxy.cs" />
     <Compile Include="Assets\ECS\ArrayHelper.cs" />
     <Compile Include="Assets\ECS\ComponentFactory.cs" />
     <Compile Include="Assets\ECS\ECS_Component.cs" />

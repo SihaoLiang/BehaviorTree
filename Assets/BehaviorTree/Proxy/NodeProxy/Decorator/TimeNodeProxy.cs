@@ -11,7 +11,7 @@ namespace BehaviorTree
     [BehaviorNode("Time", BehaviorNodeType.Decorator)]
     public class TimeNodeProxy : NodeCsProxy
     {
-        float Duration = 0;
+        int Duration = 0;
         float CurTime = 0;
 
         public override void OnAwake()
@@ -19,8 +19,8 @@ namespace BehaviorTree
             if (Node.NodeDatas == null || Node.NodeDatas["Duration"] == null)
                 return;
 
-            FloatField field = Node.NodeDatas["Duration"] as FloatField;
-            Duration = field.Value;
+            IntField field = Node.NodeDatas["Duration"] as IntField;
+            Duration = field.Value / 1000;
         }
 
         public override void OnEnable()

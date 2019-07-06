@@ -116,10 +116,12 @@ namespace BehaviorTree
         }
 
         /// <summary>
-        /// 节点运行
+        /// 节点运行注册事件
         /// </summary>
         public virtual void OnEnable()
         {
+            Proxy?.OnEnable();
+
             string[] events = OnGetEvents();
             if (events != null && events != null)
             {
@@ -129,8 +131,6 @@ namespace BehaviorTree
                     XGameEventManager.Instance.RegisterEvent(evt, OnNotify);
                 }
             }
-
-            Proxy?.OnEnable();
         }
 
         /// <summary>
@@ -146,9 +146,6 @@ namespace BehaviorTree
         /// </summary>
         public virtual void OnReset()
         {
-            if (Status != NodeStatus.READY)
-                OnDisable();
-
             Status = NodeStatus.READY;
             Proxy?.OnReset();
         }
@@ -193,6 +190,15 @@ namespace BehaviorTree
         /// </summary>
         public virtual void OnDisable()
         {
+            if (Proxy != null && Proxy.Events != null)
+            {
+                for (int i = 0; i < Proxy.Events.Length; i++)
+                {
+                    string evt = Proxy.Events[i];
+                    XGameEventManager.Instance.RemoveEvent(evt, Proxy.OnNotify);
+                }
+            }
+
             Proxy?.OnDisable();
         }
 

@@ -31,11 +31,13 @@ namespace BehaviorTree {
         /// </summary>
         public Agent BehaviorAgent;
 
+        public bool IsEnable = false;
+
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="agentData"></param>
-        public BehaviorTree(AgentData agentData)
+        public BehaviorTree(AgentData agentData,Agent agent)
         {
 
             if (BehaviorTreeData == null || BehaviorTreeData.StartNode == null)
@@ -43,8 +45,9 @@ namespace BehaviorTree {
                 Debug.LogError("行为树数据加载异常!!!!");
                 return;
             }
-
+            BehaviorAgent = agent;
             BehaviorTreeData = agentData;
+            BuildBehaviorTreeNodes();
         }
 
         /// <summary>
@@ -52,18 +55,18 @@ namespace BehaviorTree {
         /// </summary>
         /// <param name="agentData"></param>
         /// <returns></returns>
-        public void BuildBehaviorTree()
+        protected void BuildBehaviorTreeNodes()
         {
             AllNodes.Clear();
             StartNode = BuildBehaviorTreeRecursive(BehaviorTreeData.StartNode);
-        }      
+        }
 
         /// <summary>
         /// 递归生成节点
         /// </summary>
         /// <param name="nodeData"></param>
         /// <returns></returns>
-        public BaseNode BuildBehaviorTreeRecursive(NodeData nodeData)
+        protected BaseNode BuildBehaviorTreeRecursive(NodeData nodeData)
         {
             if (nodeData == null)
                 return null;
@@ -94,23 +97,13 @@ namespace BehaviorTree {
         /// </summary>
         /// <param name="nodeData"></param>
         /// <returns></returns>
-        public BaseNode InstanceBehaviorTreeNodeByData(NodeData nodeData)
+        protected BaseNode InstanceBehaviorTreeNodeByData(NodeData nodeData)
         {
             string nodeType = nodeData.ClassType;
             BaseNode baseNode = BaseNode.GetBaseNode(nodeData.ClassType);
             baseNode.InitNode(nodeData, BehaviorAgent);
             return baseNode;
         }
-
-        /// <summary>
-        /// 设置执行主体
-        /// </summary>
-        /// <param name="agent"></param>
-        public void SetAgent(Agent agent)
-        {
-            BehaviorAgent = agent;
-        }
-
 
         public void OnAwake()
         {
@@ -124,6 +117,9 @@ namespace BehaviorTree {
             }
         }
 
+        /// <summary>
+        /// 删除的时候触发
+        /// </summary>
         public void OnDestroy()
         {
             if (AllNodes == null || AllNodes.Count <= 0)
@@ -142,6 +138,9 @@ namespace BehaviorTree {
         /// <param name="deltaTime"></param>
         public void OnUpdate(float deltaTime)
         {
+            if (!IsEnable)
+                return;
+
             if (StartNode != null)
                 StartNode.OnUpdate(deltaTime);
         }
@@ -152,8 +151,44 @@ namespace BehaviorTree {
         /// <param name="deltaTime"></param>
         public void OnFixedUpdate(float deltaTime)
         {
+            if (!IsEnable)
+                return;
+
             if (StartNode != null)
                 StartNode.OnFixedUpdate(deltaTime);
+        }
+
+        /// <summary>
+        /// 行为树出池时候触发
+        /// </summary>
+        public void OnEnable()
+        {
+            IsEnable = true;
+        }
+
+        /// <summary>
+        /// 行为树回池会触发
+        /// </summary>
+        public void OnDisable()
+        {
+            IsEnable = false;
+            ResetAllNode();
+        }
+
+        /// <summary>
+        ///入池的时候重置所有节点
+        /// </summary>
+        public void ResetAllNode()
+        {
+            if (AllNodes == null || AllNodes.Count <= 0)
+                return;
+
+            for (int index = 0; index < AllNodes.Count; index++)
+            {
+                BaseNode baseNode = AllNodes[index];
+                baseNode.OnDisable();
+                baseNode.OnReset();
+            }
         }
     }
 }

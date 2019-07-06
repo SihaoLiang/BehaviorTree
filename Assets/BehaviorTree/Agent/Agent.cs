@@ -25,12 +25,7 @@ namespace BehaviorTree {
         /// <summary>
         /// 行为树
         /// </summary>
-        public BehaviorTree BehaviorTreeInstance;
-
-        /// <summary>
-        /// 公共参数
-        /// </summary>
-        public Dictionary<string, BaseField> VarDic;
+        public BehaviorTree BTree;
 
         /// <summary>
         /// 初始化代理器
@@ -53,14 +48,13 @@ namespace BehaviorTree {
                 Debug.LogError($"错误！！找不到行为主体代理器 ClassType:{ProxyType}");
                 return;
             }
-
+            Proxy.BTAgent = this;
         }
 
         public virtual void Awake()
         {
             InitProxy();
             Proxy?.OnAwake();
-            BehaviorTreeInstance?.OnAwake();
         }
 
 
@@ -75,7 +69,7 @@ namespace BehaviorTree {
 
             if (Proxy != null && Proxy.Events != null)
             {
-                for (int i = 0; i < Proxy.Events.Length; i++)
+                for (int i = 0; i < Proxy.Events.Count; i++)
                 {
                     string evt = Proxy.Events[i];
                     XGameEventManager.Instance.RegisterEvent(evt, Proxy.OnNotify);
@@ -88,13 +82,12 @@ namespace BehaviorTree {
 
             if (Proxy != null && Proxy.Events != null)
             {
-                for (int i = 0; i < Proxy.Events.Length; i++)
+                for (int i = 0; i < Proxy.Events.Count; i++)
                 {
                     string evt = Proxy.Events[i];
                     XGameEventManager.Instance.RemoveEvent(evt, Proxy.OnNotify);
                 }
             }
-
 
             Proxy?.OnDisable();
         }
@@ -102,25 +95,19 @@ namespace BehaviorTree {
         private void FixedUpdate()
         {
             Proxy?.OnFixedUpdate(Time.fixedDeltaTime);
-            BehaviorTreeInstance?.OnFixedUpdate(Time.fixedDeltaTime);
         }
 
         private void Update()
         {
-
             if (!isActiveAndEnabled)
                 return;
 
-
             Proxy?.OnUpdate(Time.deltaTime);
-
-            BehaviorTreeInstance?.OnUpdate(Time.deltaTime);
         }
 
         private void OnDestroy()
         {
             Proxy?.OnDestroy();
-            BehaviorTreeInstance?.OnDestroy();
         }
 
         /// <summary>
@@ -135,9 +122,23 @@ namespace BehaviorTree {
                 return;
             }
 
-            BehaviorTreeInstance = BehaviorTreeManager.Instance.GetBehaviorTreeById(id);
-            BehaviorTreeInstance.SetAgent(this);
-            BehaviorTreeInstance.BuildBehaviorTree();
+            //上一棵树释放
+            if (BTree != null)
+                BehaviorTreeManager.Instance.DisableBehaviorTree(BTree);
+
+            //创建行为树
+            BTree = BehaviorTreeManager.Instance.GetBehaviorTreeById(id,this);
+
+            //初始化AgentData字段
+            if (BTree.BehaviorTreeData != null && BTree.BehaviorTreeData.Fields != null)
+            {
+                List<BaseField> fields = BTree.BehaviorTreeData.Fields;
+                for (int index = 0; index < fields.Count; index++)
+                {
+                    SetVarDicByKey(fields[index].FieldName, fields[index]);
+                }
+            }
+
         }
 
 
@@ -148,10 +149,7 @@ namespace BehaviorTree {
         /// <returns></returns>
         public BaseField GetVarDicByKey(string key)
         {
-            if (VarDic == null || !VarDic.ContainsKey(key))
-                return null;
-
-            return VarDic[key];
+           return Proxy?.GetVarDicByKey(key);
         }
 
         /// <summary>
@@ -161,13 +159,7 @@ namespace BehaviorTree {
         /// <param name="baseFiled"></param>
         public void SetVarDicByKey(string key, BaseField baseFiled)
         {
-            if (VarDic == null)
-                VarDic = new Dictionary<string, BaseField>(8);
-
-            if (!VarDic.ContainsKey(key))
-                VarDic.Add(key, baseFiled);
-            else
-                VarDic[key] = baseFiled;
+            Proxy?.SetVarDicByKey(key, baseFiled);
         }
     }
 }

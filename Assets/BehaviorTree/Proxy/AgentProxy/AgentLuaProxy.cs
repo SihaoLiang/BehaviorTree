@@ -23,11 +23,13 @@ namespace BehaviorTree {
 
         public override void OnStart()
         {
+            base.OnStart();
             LuaArentProxy?.OnStart();
         }
 
         public override void OnAwake()
         {
+            base.OnAwake();
             LuaArentProxy?.OnAwake();
         }
 
@@ -43,22 +45,34 @@ namespace BehaviorTree {
 
         public override void OnDestroy()
         {
+            base.OnDestroy();
             LuaArentProxy?.OnDestroy();
         }
 
         public override void OnUpdate(float deltaTime)
         {
+            base.OnUpdate(deltaTime);
             LuaArentProxy?.OnUpdate(deltaTime);
         }
 
         public override void OnFixedUpdate(float deltaTime)
         {
+            base.OnFixedUpdate(deltaTime);
             LuaArentProxy?.OnFixedUpdate(deltaTime);
         }
 
-        public override string[] OnGetEvents()
+        public override List<string> OnGetEvents()
         {
-           return LuaArentProxy?.OnGetEvents();
+            string[] events = LuaArentProxy?.OnGetEvents();
+            if (events != null)
+            {
+                for (int i = 0; i < events.Length; i++)
+                {
+                    AddEvent(events[i]);
+                }
+            }
+
+            return Events;
         }
 
         public override void OnNotify(string evt, params object[] args)
