@@ -16,12 +16,12 @@ namespace BehaviorTree
             
         }
 
-        public override void OnDisable()
+        public override void OnExit()
         {
             
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             
         }

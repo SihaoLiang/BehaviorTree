@@ -12,5 +12,6 @@ namespace BehaviorTree
         public string ClassType;
         public BehaviorNodeType behaviorNodeType;
         public bool IsLua;
+        public bool NeedUpdate = true;
     }
 }

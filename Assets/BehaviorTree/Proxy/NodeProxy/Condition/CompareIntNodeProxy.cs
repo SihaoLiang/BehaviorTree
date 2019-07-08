@@ -12,7 +12,7 @@ namespace BehaviorTree
     {
         protected int LeftField;
         protected int RightField;
-        public override void OnEnable()
+        public override void OnEnter()
         {
             LeftField = this.Node.NodeAgent.GetVarDicByKey(LeftParameter) as IntField;
             RightField = this.Node.NodeAgent.GetVarDicByKey(RightParameter) as IntField;

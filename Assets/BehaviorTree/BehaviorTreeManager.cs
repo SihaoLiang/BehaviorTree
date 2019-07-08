@@ -176,6 +176,16 @@ namespace BehaviorTree
             RegistedCsNodeProxyTypeDic.Add(classType, nodeProxyInfo);
         }
 
+
+        /// <summary>
+        /// 注册luaAgent代理
+        /// </summary>
+        /// <param name="classType"></param>
+        public void RegistLuaAgentProxy(string classType)
+        {
+
+        }
+
         /// <summary>
         /// 初始化的类型
         /// </summary>

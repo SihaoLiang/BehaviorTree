@@ -13,7 +13,7 @@ namespace BehaviorTree
         protected float LeftField;
         protected float RightField;
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             LeftField = this.Node.NodeAgent.GetVarDicByKey(LeftParameter) as FloatField;
             RightField = this.Node.NodeAgent.GetVarDicByKey(RightParameter) as FloatField;

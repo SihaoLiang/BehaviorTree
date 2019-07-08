@@ -23,7 +23,7 @@ namespace BehaviorTree
             Frames = field.Value;
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             CurFrames = 0;
         }

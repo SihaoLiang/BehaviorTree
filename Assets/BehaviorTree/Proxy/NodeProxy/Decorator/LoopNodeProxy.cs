@@ -24,7 +24,7 @@ namespace BehaviorTree
         }
 
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             CurTimes = 0;
         }
@@ -57,10 +57,10 @@ namespace BehaviorTree
             base.OnReset();
         }
 
-        public override void OnDisable()
+        public override void OnExit()
         {
             CurTimes = 0;
-            base.OnDisable();
+            base.OnExit();
         }
 
         public override void OnDestroy()

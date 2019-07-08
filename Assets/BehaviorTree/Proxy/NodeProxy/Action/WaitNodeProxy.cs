@@ -30,7 +30,7 @@ namespace BehaviorTree
             WaitSecond = floatField.Value;
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             CurSecond = 0;
         }
@@ -43,7 +43,7 @@ namespace BehaviorTree
                 Node.Status = NodeStatus.SUCCESS;
         }
 
-        public override void OnDisable()
+        public override void OnExit()
         {
             CurSecond = 0;
         }

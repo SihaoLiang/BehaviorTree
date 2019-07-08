@@ -11,13 +11,12 @@ namespace BehaviorTree {
 
         public AgentLuaProxy(string classType)
         {
-#if XLUA
             if (NewFunc == null)
-                NewFunc = XLuaEngine.Get<Func<string, AgentLuaProxy, ILuaAgentProxy>>("XLuaBehaviorManager.NewLuaNodeProxy");
+                NewFunc = XLuaEngine.Get<Func<string, AgentLuaProxy, ILuaAgentProxy>>("XLuaBehaviorManager.NewLuaAgentProxy");
 
             if (NewFunc != null)
-                LuaArentProxy = NewFunc(classType, this);         
-#endif
+                LuaArentProxy = NewFunc(classType, this);   
+            
             this.Events = OnGetEvents();
         }
 

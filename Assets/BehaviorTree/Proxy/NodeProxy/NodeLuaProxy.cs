@@ -32,12 +32,12 @@ namespace BehaviorTree
             LuaNodeProxy?.OnAwake();
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             LuaNodeProxy?.OnEnable();
         }
 
-        public override void OnDisable()
+        public override void OnExit()
         {
             LuaNodeProxy?.OnDisable();
         }

@@ -38,9 +38,14 @@ namespace BehaviorTree
         public NodeProxy Proxy;
 
         /// <summary>
+        /// 需要Update
+        /// </summary>
+        public bool NeedUpdate = true;
+
+        /// <summary>
         /// 初始化代理器
         /// </summary>
-        public void InitNode(NodeData nodeData,Agent agent)
+        public void InitNode(NodeData nodeData, Agent agent)
         {
             Id = NodeDatas.ID;
             NodeAgent = agent;
@@ -52,14 +57,14 @@ namespace BehaviorTree
         {
             BaseNode baseNode = null;
 
-            NodeProxyInfo nodeProxy = BehaviorTreeManager.Instance.GetRegistedNodeType(classType);
-            if (nodeProxy == null)
+            NodeProxyInfo nodeProxyinfo = BehaviorTreeManager.Instance.GetRegistedNodeType(classType);
+            if (nodeProxyinfo == null)
             {
                 Debug.LogError($"错误！！行为树节点未注册 ClassType:{classType}");
                 return null;
             }
 
-            switch (nodeProxy.behaviorNodeType)
+            switch (nodeProxyinfo.behaviorNodeType)
             {
                 case BehaviorNodeType.Action:
                     baseNode = new BaseActionNode();
@@ -77,7 +82,7 @@ namespace BehaviorTree
                     Debug.LogError($"错误！！行为树节点类型错误 ClassType:{classType}");
                     break;
             }
-
+            baseNode.NeedUpdate = nodeProxyinfo.NeedUpdate;
             return baseNode;
         }
 
@@ -115,12 +120,9 @@ namespace BehaviorTree
             Proxy.NodeProxyInfo = nodeProxy;
         }
 
-        /// <summary>
-        /// 节点运行注册事件
-        /// </summary>
-        public virtual void OnEnable()
+        public virtual void Enter()
         {
-            Proxy?.OnEnable();
+            OnEnter();
 
             string[] events = OnGetEvents();
             if (events != null && events != null)
@@ -131,6 +133,14 @@ namespace BehaviorTree
                     XGameEventManager.Instance.RegisterEvent(evt, OnNotify);
                 }
             }
+        }
+
+        /// <summary>
+        /// 节点运行注册事件
+        /// </summary>
+        public virtual void OnEnter()
+        {
+            Proxy?.OnEnter();     
         }
 
         /// <summary>
@@ -164,15 +174,17 @@ namespace BehaviorTree
 
             if (Status == NodeStatus.READY)
             {
-                Status = NodeStatus.RUNNING;
-                OnEnable();
+                Enter();
+
+                if (Status == NodeStatus.READY)
+                    Status = NodeStatus.RUNNING;
             }
 
-            if(Status == NodeStatus.RUNNING)
+            if (Status == NodeStatus.RUNNING && NeedUpdate)
                 Proxy?.OnUpdate(deltaTime);
 
             if (Status == NodeStatus.SUCCESS || Status == NodeStatus.FAILED)
-                OnDisable();
+                Exit();
         }
 
 
@@ -185,10 +197,31 @@ namespace BehaviorTree
             Proxy?.OnFixedUpdate(deltaTime);
         }
 
+
         /// <summary>
         /// 节点完成后调用
         /// </summary>
-        public virtual void OnDisable()
+        public virtual void Exit()
+        {
+            string[] events = OnGetEvents();
+            if (events != null && events != null)
+            {
+                for (int i = 0; i < events.Length; i++)
+                {
+                    string evt = events[i];
+                    XGameEventManager.Instance.RemoveEvent(evt, OnNotify);
+                }
+            }
+
+            OnExit();
+        }
+
+
+
+        /// <summary>
+        /// 节点完成后调用
+        /// </summary>
+        public virtual void OnExit()
         {
             if (Proxy != null && Proxy.Events != null)
             {
@@ -199,7 +232,7 @@ namespace BehaviorTree
                 }
             }
 
-            Proxy?.OnDisable();
+            Proxy?.OnExit();
         }
 
         public virtual string[] OnGetEvents()

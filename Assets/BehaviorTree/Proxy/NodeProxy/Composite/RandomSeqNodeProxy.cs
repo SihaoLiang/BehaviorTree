@@ -27,7 +27,7 @@ namespace BehaviorTree
             base.OnDestroy();
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             RandomChildren();
         }

@@ -20,7 +20,7 @@ namespace BehaviorTree
             CompositeNode = Node as BaseCompositeNode;
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             CompositeNode.RunningNodeIndex = UnityEngine.Random.Range(0, CompositeNode.Children.Count);
         }

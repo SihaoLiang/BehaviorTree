@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ECS;
 using BehaviorTreeData;
 
 namespace BehaviorTree
 {
-    public class AgentProxy : Entity
+    public class AgentProxy 
     {
         public Agent BTAgent = null;
 

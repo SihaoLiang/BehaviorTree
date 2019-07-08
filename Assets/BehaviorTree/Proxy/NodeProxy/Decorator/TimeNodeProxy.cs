@@ -23,7 +23,7 @@ namespace BehaviorTree
             Duration = field.Value / 1000;
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             CurTime = 0;
         }
@@ -58,10 +58,10 @@ namespace BehaviorTree
             base.OnReset();
         }
 
-        public override void OnDisable()
+        public override void OnExit()
         {
             CurTime = 0;
-            base.OnDisable();
+            base.OnExit();
         }
 
     }

@@ -39,9 +39,9 @@ namespace BehaviorTree
                 PriorityList.Add(tempList[index]);
             }
         }
-        public override void OnEnable()
+        public override void OnEnter()
         {
-            base.OnEnable();
+            base.OnEnter();
             RateSortChildren();
         }
 

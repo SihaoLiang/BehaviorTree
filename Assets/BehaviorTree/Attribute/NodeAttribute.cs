@@ -6,11 +6,13 @@ namespace BehaviorTree
 
         public string ClassType;
         public BehaviorNodeType NodeType;
+        public bool NeedUpdate;
 
-        public BehaviorNodeAttribute(string classType, BehaviorNodeType nodeType)
+        public BehaviorNodeAttribute(string classType, BehaviorNodeType nodeType,bool needUpdate = true)
         {
             ClassType = classType;
             NodeType = nodeType;
+            NeedUpdate = needUpdate;
         }
     }
 }

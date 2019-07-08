@@ -186,7 +186,7 @@ namespace BehaviorTree {
             for (int index = 0; index < AllNodes.Count; index++)
             {
                 BaseNode baseNode = AllNodes[index];
-                baseNode.OnDisable();
+                baseNode.OnExit();
                 baseNode.OnReset();
             }
         }

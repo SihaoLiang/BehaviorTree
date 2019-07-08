@@ -22,7 +22,7 @@ namespace BehaviorTree
             ConditionNode = compositeNode.Children[0];
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             CurrentRunningIndex = 0;
         }
@@ -64,10 +64,10 @@ namespace BehaviorTree
 
 
 
-        public override void OnDisable()
+        public override void OnExit()
         {
             CurrentRunningIndex = 0;
-            base.OnDisable();
+            base.OnExit();
         }
 
     }

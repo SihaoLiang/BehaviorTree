@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 打开UI
 /// </summary>
-[BehaviorNode("GuideOpenUI", BehaviorNodeType.Action)]
+[BehaviorNode("GuideSendEvent", BehaviorNodeType.Action)]
 
 public class GuideSendEventNodeProxy : NodeCsProxy {
     string EventName;

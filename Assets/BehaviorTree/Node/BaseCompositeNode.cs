@@ -26,10 +26,10 @@ namespace BehaviorTree
             base.OnAwake();
         }
 
-        public override void OnEnable()
+        public override void OnEnter()
         {
             RunningNodeIndex = 0;
-            base.OnEnable();
+            base.OnEnter();
         }
 
         /// <summary>
