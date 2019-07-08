@@ -41,6 +41,7 @@ namespace BehaviorTree
         }
         public override void OnEnable()
         {
+            base.OnEnable();
             RateSortChildren();
         }
 
@@ -59,6 +60,7 @@ namespace BehaviorTree
                 prioritySum += PriorityList[index];
             }
 
+            PriorityIndex.Clear();
             RandList.Clear();
 
             //遍历所有权重
@@ -86,6 +88,7 @@ namespace BehaviorTree
                         pos = i;
                         if (priority > PriorityIndex[RandList[i]])
                             break;
+                        pos++;
                     }
                     //插入节点
                     RandList.Insert(pos, Children[index]);
@@ -93,8 +96,6 @@ namespace BehaviorTree
                     PriorityIndex.Add(Children[index], priority);
                 }
             }
-
-            PriorityIndex.Clear();
         }
 
         public override void OnUpdate(float deltaTime)

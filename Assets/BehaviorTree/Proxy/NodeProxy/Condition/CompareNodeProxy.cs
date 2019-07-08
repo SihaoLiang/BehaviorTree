@@ -4,17 +4,15 @@ using UnityEngine;
 using BehaviorTreeData;
 namespace BehaviorTree
 {
-    [BehaviorNode("Compare", BehaviorNodeType.Action)]
+    [BehaviorNode("Compare", BehaviorNodeType.Condition)]
     public class CompareNodeProxy : NodeCsProxy
     {
-        CompareDataSource LeftType = CompareDataSource.Agent;
-        CompareDataSource RightType = CompareDataSource.Agent;
-        string LeftParameter;
-        string RightParameter;
-        CompareSymbol CompareType;
+        protected CompareDataSource LeftType = CompareDataSource.Agent;
+        protected CompareDataSource RightType = CompareDataSource.Agent;
+        protected string LeftParameter;
+        protected string RightParameter;
+        protected CompareSymbol CompareType;
 
-        BaseField LeftField;
-        BaseField RightField;
 
         public override void OnAwake()
         {
@@ -39,19 +37,5 @@ namespace BehaviorTree
             LeftParameter = Node.NodeDatas["LeftParameter"] as StringField;
             RightParameter = Node.NodeDatas["RightParameter"] as StringField;
         }
-
-        public override void OnEnable()
-        {
-           
-        }
-
-
-        public override void OnUpdate(float deltaTime)
-        {
-            
-
-
-        }
-
     }
 }

@@ -34,7 +34,6 @@ namespace BehaviorTree
         {
             Node.NodeAgent.SetVarDicByKey(AssignmentKey, AssignmentValue);
             Node.Status = NodeStatus.SUCCESS;
-
         }
     }
 }

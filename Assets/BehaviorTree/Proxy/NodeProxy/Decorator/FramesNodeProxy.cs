@@ -13,14 +13,14 @@ namespace BehaviorTree
     {
         int Frames = -1;
         int CurFrames = -1;
-        
+
         public override void OnAwake()
         {
             if (Node.NodeDatas == null || Node.NodeDatas["Frames"] == null)
                 return;
 
             IntField field = Node.NodeDatas["Frames"] as IntField;
-            Frames = field.Value;         
+            Frames = field.Value;
         }
 
         public override void OnEnable()
@@ -33,7 +33,7 @@ namespace BehaviorTree
             CurFrames++;
 
             BaseDecoratorNode decoratorNode = Node as BaseDecoratorNode;
-           
+
             decoratorNode.ChildNode.OnUpdate(deltaTime);
 
             if (decoratorNode.ChildNode.Status == NodeStatus.ERROR)
@@ -42,11 +42,15 @@ namespace BehaviorTree
                 return;
             }
 
+            if (Frames <= CurFrames)
+            {
+                decoratorNode.Status = NodeStatus.SUCCESS;
+                return;
+            }
+
             if (decoratorNode.ChildNode.Status == NodeStatus.FAILED || decoratorNode.ChildNode.Status == NodeStatus.SUCCESS)
                 decoratorNode.ChildNode.OnReset();
 
-            if(Frames <= CurFrames)
-                decoratorNode.Status = NodeStatus.SUCCESS;
         }
 
         public override void OnReset()

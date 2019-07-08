@@ -6,8 +6,8 @@ using BehaviorTreeData;
 /// <summary>
 /// 等待事件节点
 /// </summary>
-[BehaviorNode("WaitForEvent",BehaviorNodeType.Action)]
-public class WaitForEventNodeProxy : NodeCsProxy
+[BehaviorNode(" GuideWaitForEvent", BehaviorNodeType.Action)]
+public class GuideWaitForEventNodeProxy : NodeCsProxy
 {
     string WaitForEvent = string.Empty;
     const float WaitTimeOutWarn = 10f; //超时警告

@@ -42,11 +42,14 @@ namespace BehaviorTree
                 return;
             }
 
+            if (Duration <= CurTime)
+            {
+                decoratorNode.Status = NodeStatus.SUCCESS;
+                return;
+            }
+
             if (decoratorNode.ChildNode.Status == NodeStatus.FAILED || decoratorNode.ChildNode.Status == NodeStatus.SUCCESS)
                 decoratorNode.ChildNode.OnReset();
-       
-            if (Duration <= CurTime)
-                decoratorNode.Status = NodeStatus.SUCCESS;
         }
 
         public override void OnReset()
