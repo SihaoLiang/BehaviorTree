@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviorTreeData;
 using UnityEngine;
-#if CLIENT
+#if XLUA
 using XLua;
 #endif
 
@@ -15,14 +15,17 @@ namespace BehaviorTree
         public ILuaNodeProxy LuaNodeProxy = null;
         static Func<string, NodeLuaProxy, ILuaNodeProxy> NewFunc = null;
 
-        public NodeLuaProxy(NodeProxyInfo nodeProxyInfo)
+        public override void SetNode(BaseNode baseNode)
         {
+            this.Node = baseNode;
+            this.NodeProxyInfo = baseNode.NodeInfo;
 #if XLUA
+        
             if (NewFunc == null)
                 NewFunc = XLuaEngine.Get<Func<string, NodeLuaProxy, ILuaNodeProxy>>("XLuaBehaviorManager.NewLuaNodeProxy");
 
             if (NewFunc != null)
-                LuaNodeProxy = NewFunc(nodeProxyInfo.ClassType, this);
+                LuaNodeProxy = NewFunc(baseNode.NodeInfo.ClassType, this);
 #endif
             this.Events = OnGetEvents();
         }
@@ -34,17 +37,17 @@ namespace BehaviorTree
 
         public override void OnEnter()
         {
-            LuaNodeProxy?.OnEnable();
+            LuaNodeProxy?.OnEnter();
         }
 
         public override void OnExit()
         {
-            LuaNodeProxy?.OnDisable();
+            LuaNodeProxy?.OnExit();
         }
 
         public override void OnDestroy()
         {
-            LuaNodeProxy?.OnDisable();
+            LuaNodeProxy?.OnDestroy();
         }
 
         public override void OnReset()

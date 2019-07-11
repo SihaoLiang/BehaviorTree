@@ -16,7 +16,7 @@ namespace BehaviorTree
 
         public override void OnAwake()
         {
-            if (Node.NodeDatas == null || Node.NodeDatas["Priority"] == null)
+            if (Node.Fields == null || Node.Fields["Priority"] == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
@@ -31,7 +31,7 @@ namespace BehaviorTree
             RandList.Clear();
 
             PriorityList = new List<int>();
-            RepeatIntField repeatIntField = Node.NodeDatas["Priority"] as RepeatIntField;
+            RepeatIntField repeatIntField = Node.Fields["Priority"] as RepeatIntField;
             List<int> tempList = repeatIntField.Value;
 
             for (int index = 0; index < tempList.Count; index++)

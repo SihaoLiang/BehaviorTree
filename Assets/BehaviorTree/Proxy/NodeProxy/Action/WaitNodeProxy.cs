@@ -10,29 +10,33 @@ namespace BehaviorTree
     [BehaviorNode("Wait", BehaviorNodeType.Action)]
     public class WaitNodeProxy : NodeCsProxy
     {
+        int WaitTime = 0;
         float WaitSecond = 0;
         float CurSecond = 0;
         public override void OnAwake()
         {
-            if (Node.NodeDatas == null)
+            if (Node.Fields == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
 
-            if (Node.NodeDatas["WaitSecond"] == null)
+            if (Node.Fields["WaitTime"] == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
 
-            FloatField floatField = Node.NodeDatas["WaitSecond"] as FloatField;
-            WaitSecond = floatField.Value;
+            IntField floatField = Node.Fields["WaitTime"] as IntField;
+            WaitTime = floatField.Value;
         }
 
         public override void OnEnter()
         {
             CurSecond = 0;
+            WaitSecond = WaitTime / 1000;
+            if (WaitTime <= CurSecond)
+                Node.Status = NodeStatus.SUCCESS;
         }
 
         public override void OnUpdate(float deltaTime)

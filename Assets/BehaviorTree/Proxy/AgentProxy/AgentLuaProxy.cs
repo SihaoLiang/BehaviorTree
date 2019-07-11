@@ -5,64 +5,59 @@ using UnityEngine;
 namespace BehaviorTree {
     public class AgentLuaProxy : AgentProxy {
 
-        public ILuaAgentProxy LuaArentProxy = null;
+        public ILuaAgentProxy LuaAgentProxy = null;
         static Func<string, AgentLuaProxy, ILuaAgentProxy> NewFunc = null;
 
-
-        public AgentLuaProxy(string classType)
+        public override void SetAgent(Agent agent, string classType)
         {
+            BTAgent = agent;
+#if XLUA
             if (NewFunc == null)
                 NewFunc = XLuaEngine.Get<Func<string, AgentLuaProxy, ILuaAgentProxy>>("XLuaBehaviorManager.NewLuaAgentProxy");
 
             if (NewFunc != null)
-                LuaArentProxy = NewFunc(classType, this);   
-            
+                LuaAgentProxy = NewFunc(classType, this);
+#endif
             this.Events = OnGetEvents();
         }
 
         public override void OnStart()
         {
             base.OnStart();
-            LuaArentProxy?.OnStart();
+            LuaAgentProxy?.OnStart();
         }
 
         public override void OnAwake()
         {
             base.OnAwake();
-            LuaArentProxy?.OnAwake();
+            LuaAgentProxy?.OnAwake();
         }
 
         public override void OnEnable()
         {
-            LuaArentProxy?.OnEnable();
+            LuaAgentProxy?.OnEnable();
         }
 
         public override void OnDisable()
         {
-            LuaArentProxy?.OnDisable();
+            LuaAgentProxy?.OnDisable();
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            LuaArentProxy?.OnDestroy();
+            LuaAgentProxy?.OnDestroy();
         }
 
         public override void OnUpdate(float deltaTime)
         {
             base.OnUpdate(deltaTime);
-            LuaArentProxy?.OnUpdate(deltaTime);
-        }
-
-        public override void OnFixedUpdate(float deltaTime)
-        {
-            base.OnFixedUpdate(deltaTime);
-            LuaArentProxy?.OnFixedUpdate(deltaTime);
+            LuaAgentProxy?.OnUpdate();
         }
 
         public override List<string> OnGetEvents()
         {
-            string[] events = LuaArentProxy?.OnGetEvents();
+            string[] events = LuaAgentProxy?.OnGetEvents();
             if (events != null)
             {
                 for (int i = 0; i < events.Length; i++)
@@ -76,7 +71,7 @@ namespace BehaviorTree {
 
         public override void OnNotify(string evt, params object[] args)
         {
-            LuaArentProxy?.OnNotify(evt, args);
+            LuaAgentProxy?.OnNotify(evt, args);
         }
     }
 }

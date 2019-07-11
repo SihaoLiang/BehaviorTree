@@ -9,12 +9,12 @@ namespace BehaviorTree {
         /// <summary>
         /// 行为树Id
         /// </summary>
-        public string BehaviorTreeId;
+        public string Id;
         
         /// <summary>
         /// 行为树全部数据
         /// </summary>
-        public AgentData BehaviorTreeData;
+        public AgentData BTAgentData;
         
         /// <summary>
         /// 行为树开始节点
@@ -24,13 +24,16 @@ namespace BehaviorTree {
         /// <summary>
         /// 行为树所有节点
         /// </summary>
-        public List<BaseNode> AllNodes;
+        public List<BaseNode> AllNodes = new List<BaseNode>();
 
         /// <summary>
         /// 主体
         /// </summary>
-        public Agent BehaviorAgent;
+        public Agent BTAgent;
 
+        /// <summary>
+        /// 可用
+        /// </summary>
         public bool IsEnable = false;
 
         /// <summary>
@@ -39,14 +42,13 @@ namespace BehaviorTree {
         /// <param name="agentData"></param>
         public BehaviorTree(AgentData agentData,Agent agent)
         {
-
-            if (BehaviorTreeData == null || BehaviorTreeData.StartNode == null)
+            if (agentData == null || agentData.StartNode == null)
             {
                 Debug.LogError("行为树数据加载异常!!!!");
                 return;
             }
-            BehaviorAgent = agent;
-            BehaviorTreeData = agentData;
+            BTAgent = agent;
+            BTAgentData = agentData;
             BuildBehaviorTreeNodes();
         }
 
@@ -58,7 +60,7 @@ namespace BehaviorTree {
         protected void BuildBehaviorTreeNodes()
         {
             AllNodes.Clear();
-            StartNode = BuildBehaviorTreeRecursive(BehaviorTreeData.StartNode);
+            StartNode = BuildBehaviorTreeRecursive(BTAgentData.StartNode);
         }
 
         /// <summary>
@@ -69,13 +71,16 @@ namespace BehaviorTree {
         protected BaseNode BuildBehaviorTreeRecursive(NodeData nodeData)
         {
             if (nodeData == null)
+            {
+                Debug.LogError("NodeData is null");
                 return null;
+            }
 
-            BaseNode parentNode = InstanceBehaviorTreeNodeByData(nodeData);
+            BaseNode parentNode = InstanceNodeByData(nodeData);
             AllNodes.Add(parentNode);
 
             if (nodeData.Childs == null || nodeData.Childs.Count <= 0)
-                return StartNode;
+                return parentNode;
 
             for (int index = 0; index < nodeData.Childs.Count; index++)
             {
@@ -93,15 +98,15 @@ namespace BehaviorTree {
         }
 
         /// <summary>
-        /// 创建节点
+        /// 创建节点实例
         /// </summary>
         /// <param name="nodeData"></param>
         /// <returns></returns>
-        protected BaseNode InstanceBehaviorTreeNodeByData(NodeData nodeData)
+        protected BaseNode InstanceNodeByData(NodeData nodeData)
         {
             string nodeType = nodeData.ClassType;
             BaseNode baseNode = BaseNode.GetBaseNode(nodeData.ClassType);
-            baseNode.InitNode(nodeData, BehaviorAgent);
+            baseNode.InitNode(nodeData, BTAgent);
             return baseNode;
         }
 
@@ -132,6 +137,15 @@ namespace BehaviorTree {
             }
         }
 
+        public void OnBegin()
+        {
+
+        }
+
+        public void OnEnd()
+        {
+        }
+
         /// <summary>
         /// 驱动行为树
         /// </summary>
@@ -141,8 +155,20 @@ namespace BehaviorTree {
             if (!IsEnable)
                 return;
 
+            if (StartNode.Status == NodeStatus.ERROR)
+                return;
+
+            if (StartNode.Status == NodeStatus.SUCCESS || StartNode.Status == NodeStatus.FAILED)
+                return;
+       
+            if (StartNode.Status == NodeStatus.READY)
+                OnBegin();
+
             if (StartNode != null)
                 StartNode.OnUpdate(deltaTime);
+
+            if (StartNode.Status != NodeStatus.RUNNING)
+                OnEnd();
         }
 
         /// <summary>

@@ -15,22 +15,22 @@ namespace BehaviorTree
 
         public override void OnAwake()
         {
-            if (Node.NodeDatas == null)
+            if (Node.Fields == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
             
-            if (Node.NodeDatas["AssignmentKey"] == null || Node.NodeDatas["AssignmentValue"] == null)
+            if (Node.Fields["AssignmentKey"] == null || Node.Fields["AssignmentValue"] == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
 
-            AssignmentValue = Node.NodeDatas["AssignmentValue"];
+            AssignmentValue = Node.Fields["AssignmentValue"];
         }
 
-        public override void OnUpdate(float deltaTime)
+        public override void OnEnter()
         {
             Node.NodeAgent.SetVarDicByKey(AssignmentKey, AssignmentValue);
             Node.Status = NodeStatus.SUCCESS;

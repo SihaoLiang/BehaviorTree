@@ -27,10 +27,10 @@ public class ParallelNodeProxy : NodeCsProxy
           
         public override void OnAwake()
         {
-            EnumField enumFieldFailPolicy = Node.NodeDatas["FailPolicy"] as EnumField;
+            EnumField enumFieldFailPolicy = Node.Fields["FailPolicy"] as EnumField;
             FailPolicy = enumFieldFailPolicy.Value;
 
-            EnumField enumFieldSucceedPolicy = Node.NodeDatas["SucceedPolicy"] as EnumField;
+            EnumField enumFieldSucceedPolicy = Node.Fields["SucceedPolicy"] as EnumField;
             FailPolicy = enumFieldFailPolicy.Value;
         }
 

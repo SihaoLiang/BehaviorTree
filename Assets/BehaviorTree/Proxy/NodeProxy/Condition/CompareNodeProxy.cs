@@ -16,26 +16,26 @@ namespace BehaviorTree
 
         public override void OnAwake()
         {
-            if (Node.NodeDatas == null)
+            if (Node.Fields == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
 
-            if (Node.NodeDatas["LeftType"] == null || Node.NodeDatas["CompareType"] == null ||Node.NodeDatas["RightType"] == null || Node.NodeDatas["LeftParameter"] == null || Node.NodeDatas["RightParameter"] == null)
+            if (Node.Fields["LeftType"] == null || Node.Fields["CompareType"] == null ||Node.Fields["RightType"] == null || Node.Fields["LeftParameter"] == null || Node.Fields["RightParameter"] == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
-            EnumField LeftTypeField = Node.NodeDatas["LeftType"] as EnumField;
-            EnumField RightTypeField = Node.NodeDatas["RightType"] as EnumField;
-            EnumField CompareSymbolField = Node.NodeDatas["CompareType"] as EnumField;
+            EnumField LeftTypeField = Node.Fields["LeftType"] as EnumField;
+            EnumField RightTypeField = Node.Fields["RightType"] as EnumField;
+            EnumField CompareSymbolField = Node.Fields["CompareType"] as EnumField;
             LeftType = (CompareDataSource)LeftTypeField.Value;
             RightType = (CompareDataSource)RightTypeField.Value;
             CompareType = (CompareSymbol)CompareSymbolField.Value;
 
-            LeftParameter = Node.NodeDatas["LeftParameter"] as StringField;
-            RightParameter = Node.NodeDatas["RightParameter"] as StringField;
+            LeftParameter = Node.Fields["LeftParameter"] as StringField;
+            RightParameter = Node.Fields["RightParameter"] as StringField;
         }
     }
 }

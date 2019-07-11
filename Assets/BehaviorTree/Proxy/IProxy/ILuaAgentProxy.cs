@@ -20,10 +20,10 @@ namespace BehaviorTree
         void OnDestroy();
 
 
-        void OnUpdate(float dedeltaTime);
+        void OnUpdate();
 
 
-        void OnFixedUpdate(float dedeltaTime);
+       // void OnFixedUpdate(float dedeltaTime);
 
         string[] OnGetEvents();
 

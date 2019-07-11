@@ -15,14 +15,14 @@ namespace BehaviorTree
 
         public override void OnAwake()
         {
-            if (Node.NodeDatas == null)
+            if (Node.Fields == null)
                 return;
 
-            if (Node.NodeDatas["UntilKey"] == null || Node.NodeDatas["UntilValue"] == null)
+            if (Node.Fields["UntilKey"] == null || Node.Fields["UntilValue"] == null)
                 return;
 
-            UntilKey = Node.NodeDatas["UntilKey"] as StringField;
-            UntilValue = Node.NodeDatas["UntilValue"];
+            UntilKey = Node.Fields["UntilKey"] as StringField;
+            UntilValue = Node.Fields["UntilValue"];
         }
 
         public override void OnUpdate(float deltaTime)

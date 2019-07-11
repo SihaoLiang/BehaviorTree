@@ -4,51 +4,19 @@ using UnityEngine;
 
 namespace BehaviorTree
 {
+    /// <summary>
+    /// CsAgent代理
+    /// </summary>
     public class AgentCsProxy : AgentProxy
     {
-        public override void OnAwake()
+        public override void SetAgent(Agent agent, string classType)
         {
-            base.OnAwake();
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-        }
-
-        public override void OnDisable()
-        {
-            base.OnDisable();
-        }
-
-        public override void OnEnable()
-        {
-            base.OnEnable();
-        }
-
-        public override void OnFixedUpdate(float dedeltaTime)
-        {
-            base.OnFixedUpdate(dedeltaTime);
+            BTAgent = agent;
         }
 
         public override List<string> OnGetEvents()
         {
             return Events;
-        }
-
-        public override void OnNotify(string evt, params object[] args)
-        {
-            base.OnNotify(evt, args);
-        }
-
-        public override void OnStart()
-        {
-            base.OnStart();
-        }
-
-        public override void OnUpdate(float dedeltaTime)
-        {
-            base.OnUpdate(dedeltaTime);
         }
     }
 }

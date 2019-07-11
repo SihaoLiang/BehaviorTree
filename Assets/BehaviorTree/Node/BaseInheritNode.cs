@@ -4,35 +4,26 @@ using UnityEngine;
 
 namespace BehaviorTree
 {
-    public class BaseInheritNode : BaseNode
+    public abstract class BaseInheritNode : BaseNode
     {
-
         /// <summary>
         /// 添加节点
         /// </summary>
         /// <param name="node"></param>
-        public virtual void AddNode(BaseNode node)
-        {
-
-        }
+        public abstract void AddNode(BaseNode node);
 
         /// <summary>
         /// 删除节点
         /// </summary>
         /// <param name="node"></param>
-        public virtual void RemoveNode(BaseNode node)
-        {
-
-        }
+        public abstract void RemoveNode(BaseNode node);
 
         /// <summary>
         /// 判断是否有节点
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public virtual bool HasNode(BaseNode node)
-        {
-            return false;
-        }
+        public abstract bool HasNode(BaseNode node);
+      
     }
 }

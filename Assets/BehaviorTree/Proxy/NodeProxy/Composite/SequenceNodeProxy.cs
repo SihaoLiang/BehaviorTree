@@ -44,7 +44,7 @@ namespace BehaviorTree
                 case NodeStatus.ERROR:
                     {
                         compositeNode.Status = NodeStatus.ERROR;
-                        break;
+                        return;
                     }
             }
         }

@@ -37,11 +37,11 @@ namespace BehaviorTree
         /// <param name="behaviorTree"></param>
         public void DeSpawn(BehaviorTree behaviorTree)
         {
-            string id = behaviorTree.BehaviorTreeId;
+            string id = behaviorTree.Id;
             if (!Pools.ContainsKey(id))
                 Pools.Add(id, new List<BehaviorTree>());
 
-            behaviorTree.BehaviorAgent = null;
+            behaviorTree.BTAgent = null;
 
             Pools[id].Add(behaviorTree);
         }

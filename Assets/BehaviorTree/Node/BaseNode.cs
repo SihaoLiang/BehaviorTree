@@ -8,19 +8,19 @@ namespace BehaviorTree
     public abstract class BaseNode
     {
         /// <summary>
-        /// ID
+        /// 节点ID
         /// </summary>
-        public int Id;
+        public int ID;
 
         /// <summary>
         /// 节点数据
         /// </summary>
-        public NodeData NodeDatas;
+        public NodeData Fields;
 
         /// <summary>
         /// 节点状态
         /// </summary>
-        public NodeStatus Status;
+        public NodeStatus Status = NodeStatus.READY;
 
         /// <summary>
         /// 父节点
@@ -38,33 +38,40 @@ namespace BehaviorTree
         public NodeProxy Proxy;
 
         /// <summary>
-        /// 需要Update
+        /// 节点的信息
         /// </summary>
-        public bool NeedUpdate = true;
+        public NodeProxyInfo NodeInfo;
 
         /// <summary>
         /// 初始化代理器
         /// </summary>
         public void InitNode(NodeData nodeData, Agent agent)
         {
-            Id = NodeDatas.ID;
-            NodeAgent = agent;
-            NodeDatas = nodeData;
+            this.ID = nodeData.ID;
+            this.Fields = nodeData;
+            this.NodeAgent = agent;
+
             InitProxy();
         }
 
+        /// <summary>
+        /// 通过类型获取节点
+        /// </summary>
+        /// <param name="classType"></param>
+        /// <returns></returns>
         public static BaseNode GetBaseNode(string classType)
         {
             BaseNode baseNode = null;
 
-            NodeProxyInfo nodeProxyinfo = BehaviorTreeManager.Instance.GetRegistedNodeType(classType);
-            if (nodeProxyinfo == null)
+            NodeProxyInfo nodeProxyInfo = BehaviorTreeManager.Instance.GetRegistedNodeType(classType);
+
+            if (nodeProxyInfo == null)
             {
                 Debug.LogError($"错误！！行为树节点未注册 ClassType:{classType}");
                 return null;
             }
 
-            switch (nodeProxyinfo.behaviorNodeType)
+            switch (nodeProxyInfo.behaviorNodeType)
             {
                 case BehaviorNodeType.Action:
                     baseNode = new BaseActionNode();
@@ -82,7 +89,7 @@ namespace BehaviorTree
                     Debug.LogError($"错误！！行为树节点类型错误 ClassType:{classType}");
                     break;
             }
-            baseNode.NeedUpdate = nodeProxyinfo.NeedUpdate;
+            baseNode.NodeInfo = nodeProxyInfo;
             return baseNode;
         }
 
@@ -91,33 +98,23 @@ namespace BehaviorTree
         /// </summary>
         void InitProxy()
         {
-            string classType = NodeDatas.ClassType;
-            NodeProxyInfo nodeProxy = BehaviorTreeManager.Instance.GetRegistedNodeType(classType);
-
-            if (nodeProxy == null)
+            if (!NodeInfo.IsLua)
             {
-                Debug.LogError($"错误！！行为树节点未注册 ClassType:{classType}");
-                return;
-            }
-
-            if (!nodeProxy.IsLua)
-            {
-                Type type = BehaviorTreeManager.Instance.GetBehaviorNodeType(nodeProxy.ClassType);
+                Type type = BehaviorTreeManager.Instance.GetBehaviorNodeType(NodeInfo.ClassType);
                 Proxy = Activator.CreateInstance(type) as NodeProxy;
             }
             else
             {
-                Proxy = new NodeLuaProxy(nodeProxy);
+                Proxy = new NodeLuaProxy();
             }
 
             if (Proxy == null)
             {
-                Debug.LogError($"错误！！找不到行为树节点代理器 ClassType:{classType}");
+                Debug.LogError($"错误！！找不到行为树节点代理器 ClassType:{NodeInfo.ClassType}");
                 return;
             }
 
-            Proxy.Node = this;
-            Proxy.NodeProxyInfo = nodeProxy;
+            Proxy.SetNode(this);
         }
 
         public virtual void Enter()
@@ -168,7 +165,7 @@ namespace BehaviorTree
         {
             if (Status == NodeStatus.ERROR)
             {
-                Debug.LogError("运行行为树节点出错！！！！");
+                Debug.LogError($"行为节点出错！！！！ClassType:{NodeInfo.ClassType} IsLua:{NodeInfo.IsLua}");
                 return;
             }
 
@@ -180,7 +177,7 @@ namespace BehaviorTree
                     Status = NodeStatus.RUNNING;
             }
 
-            if (Status == NodeStatus.RUNNING && NeedUpdate)
+            if (Status == NodeStatus.RUNNING && NodeInfo.NeedUpdate)
                 Proxy?.OnUpdate(deltaTime);
 
             if (Status == NodeStatus.SUCCESS || Status == NodeStatus.FAILED)
@@ -197,14 +194,13 @@ namespace BehaviorTree
             Proxy?.OnFixedUpdate(deltaTime);
         }
 
-
         /// <summary>
         /// 节点完成后调用
         /// </summary>
         public virtual void Exit()
         {
             string[] events = OnGetEvents();
-            if (events != null && events != null)
+            if (events != null && events.Length > 0)
             {
                 for (int i = 0; i < events.Length; i++)
                 {
@@ -223,15 +219,6 @@ namespace BehaviorTree
         /// </summary>
         public virtual void OnExit()
         {
-            if (Proxy != null && Proxy.Events != null)
-            {
-                for (int i = 0; i < Proxy.Events.Length; i++)
-                {
-                    string evt = Proxy.Events[i];
-                    XGameEventManager.Instance.RemoveEvent(evt, Proxy.OnNotify);
-                }
-            }
-
             Proxy?.OnExit();
         }
 

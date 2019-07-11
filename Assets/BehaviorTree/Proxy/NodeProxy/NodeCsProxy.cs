@@ -6,6 +6,11 @@ namespace BehaviorTree
 {
     public class NodeCsProxy : NodeProxy
     {
+        public NodeCsProxy()
+        {
+            Events = OnGetEvents();
+        }
+
         public override void OnAwake()
         {
             
@@ -50,6 +55,12 @@ namespace BehaviorTree
         public override void OnUpdate(float deltaTime)
         {
            
+        }
+
+        public override void SetNode(BaseNode baseNode)
+        {
+            this.Node = baseNode;
+            this.NodeProxyInfo = baseNode.NodeInfo;
         }
     }
 }

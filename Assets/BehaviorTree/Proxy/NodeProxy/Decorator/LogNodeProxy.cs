@@ -13,7 +13,7 @@ namespace BehaviorTree
         string LogContent = string.Empty;
         public override void OnAwake()
         {
-            if (Node.NodeDatas == null || Node.NodeDatas["Content"] == null)
+            if (Node.Fields == null || Node.Fields["Content"] == null)
                 return;
 
             // Node.NodeDatas["Content"].

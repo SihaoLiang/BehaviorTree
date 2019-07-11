@@ -13,11 +13,6 @@ namespace BehaviorTree {
         public AgentProxy Proxy;
 
         /// <summary>
-        /// 是否是lua代理
-        /// </summary>
-        public bool IsLueProxy = false;
-
-        /// <summary>
         /// 代理类型
         /// </summary>
         public string ProxyType = string.Empty;
@@ -32,15 +27,21 @@ namespace BehaviorTree {
         /// </summary>
         public virtual void InitProxy()
         {
-          
-            if (!IsLueProxy)
+            AgentProxyTypeInfo agentTypeInfo = BehaviorTreeManager.Instance.GetRegistedAgentType(ProxyType);
+            if (agentTypeInfo == null)
             {
-                Type type = BehaviorTreeManager.Instance.GetAgentType(ProxyType);
+                Debug.LogError($"行为主体未注册 AgentName ：{ProxyType}");
+                return;
+            }
+
+            if (!agentTypeInfo.IsLua)
+            {
+                Type type = BehaviorTreeManager.Instance.GetAgentType(agentTypeInfo.AgentName);
                 Proxy = Activator.CreateInstance(type) as AgentCsProxy;
             }
             else
             {
-                Proxy = new AgentLuaProxy(ProxyType);
+                Proxy = new AgentLuaProxy();
             }
 
             if (Proxy == null)
@@ -48,7 +49,8 @@ namespace BehaviorTree {
                 Debug.LogError($"错误！！找不到行为主体代理器 ClassType:{ProxyType}");
                 return;
             }
-            Proxy.BTAgent = this;
+
+            Proxy.SetAgent(this, agentTypeInfo.AgentName);
         }
 
         public virtual void Awake()
@@ -102,7 +104,14 @@ namespace BehaviorTree {
             if (!isActiveAndEnabled)
                 return;
 
-            Proxy?.OnUpdate(Time.deltaTime);
+            try
+            {
+                Proxy?.OnUpdate(Time.deltaTime);
+            }
+            catch(Exception ex)
+            {
+                Debug.LogError(ex);
+            }
         }
 
         private void OnDestroy()
@@ -130,9 +139,9 @@ namespace BehaviorTree {
             BTree = BehaviorTreeManager.Instance.GetBehaviorTreeById(id,this);
 
             //初始化AgentData字段
-            if (BTree.BehaviorTreeData != null && BTree.BehaviorTreeData.Fields != null)
+            if (BTree.BTAgentData != null && BTree.BTAgentData.Fields != null)
             {
-                List<BaseField> fields = BTree.BehaviorTreeData.Fields;
+                List<BaseField> fields = BTree.BTAgentData.Fields;
                 for (int index = 0; index < fields.Count; index++)
                 {
                     SetVarDicByKey(fields[index].FieldName, fields[index]);

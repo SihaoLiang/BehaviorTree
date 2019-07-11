@@ -251,6 +251,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\BehaviorTree\Agent\Agent.cs" />
+    <Compile Include="Assets\BehaviorTree\Agent\AgentTypeInfo.cs" />
     <Compile Include="Assets\BehaviorTree\Attribute\AgentProxyAttribute.cs" />
     <Compile Include="Assets\BehaviorTree\Attribute\NodeAttribute.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTree.cs" />
@@ -302,6 +303,7 @@
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Action\AssignmentIntNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Action\AssignmentNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Action\AssignmentStringNodeProxy.cs" />
+    <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Action\EmptyNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Action\WaitNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Composite\IfElseNodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\Composite\ParallelNodeProxy.cs" />
@@ -328,12 +330,6 @@
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeLuaProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeProxy.cs" />
     <Compile Include="Assets\BehaviorTree\Proxy\NodeProxy\NodeProxyInfo.cs" />
-    <Compile Include="Assets\Custom\AgentProxy\GuideAgentProxy.cs" />
-    <Compile Include="Assets\Custom\NodeProxy\Guide\GuideDailogNodeProxy.cs" />
-    <Compile Include="Assets\Custom\NodeProxy\Guide\GuideFocusOnUINodeProxy.cs" />
-    <Compile Include="Assets\Custom\NodeProxy\Guide\GuideOpenUINodeProxy.cs" />
-    <Compile Include="Assets\Custom\NodeProxy\Guide\GuideSendEventNodeProxy.cs" />
-    <Compile Include="Assets\Custom\NodeProxy\Guide\GuideWaitForEventNodeProxy.cs" />
     <Compile Include="Assets\ECS\ArrayHelper.cs" />
     <Compile Include="Assets\ECS\ComponentFactory.cs" />
     <Compile Include="Assets\ECS\ECS_Component.cs" />

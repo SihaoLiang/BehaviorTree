@@ -10,9 +10,9 @@ namespace BehaviorTree
     {
         void OnAwake();
 
-        void OnEnable();
+        void OnEnter();
 
-        void OnDisable();
+        void OnExit();
 
         void OnDestroy();
 

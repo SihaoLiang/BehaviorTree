@@ -9,6 +9,9 @@ namespace BehaviorTree
     {
         public Agent BTAgent = null;
 
+        /// <summary>
+        /// Agent对象
+        /// </summary>
         public GameObject gameObject
         {
             get {
@@ -18,6 +21,9 @@ namespace BehaviorTree
             }
         }
    
+        /// <summary>
+        /// 行为树
+        /// </summary>
         protected BehaviorTree BTree
         {
             get
@@ -30,11 +36,20 @@ namespace BehaviorTree
         /// <summary>
         /// 公共参数
         /// </summary>
-        public Dictionary<string, BaseField> VarDic;
+        public Dictionary<string, BaseField> VarDic = new Dictionary<string, BaseField>();
+
+        /// <summary>
+        /// 监听的事件
+        /// </summary>
         public List<string> Events = new List<string>();
         
         public virtual void OnStart() {
            
+        }
+
+        public virtual void SetAgent(Agent agent,string classType)
+        {
+
         }
 
         public virtual void OnAwake()
@@ -66,7 +81,7 @@ namespace BehaviorTree
             return Events;
         }
 
-        public virtual void OnNotify(string evt, params object[] args) { }
+        public virtual void OnNotify(string evt, params object[] args) {}
 
         /// <summary>
         /// 获取公共参数
@@ -75,10 +90,11 @@ namespace BehaviorTree
         /// <returns></returns>
         public BaseField GetVarDicByKey(string key)
         {
-            if (VarDic == null || !VarDic.ContainsKey(key))
-                return null;
+            BaseField baseField = null;
+            if (!VarDic.TryGetValue(key, out baseField))
+                Debug.LogError($"找不到公共参数 KEY:{key}");
 
-            return VarDic[key];
+            return baseField;
         }
 
         /// <summary>
@@ -88,9 +104,6 @@ namespace BehaviorTree
         /// <param name="baseFiled"></param>
         public void SetVarDicByKey(string key, BaseField baseFiled)
         {
-            if (VarDic == null)
-                VarDic = new Dictionary<string, BaseField>(8);
-
             if (!VarDic.ContainsKey(key))
                 VarDic.Add(key, baseFiled);
             else
@@ -99,9 +112,6 @@ namespace BehaviorTree
 
         public void AddEvent(string evt)
         {
-            if (Events == null)
-                Events = new List<string>();
-
             if (!Events.Contains(evt))
                 Events.Add(evt);
         }
@@ -109,9 +119,6 @@ namespace BehaviorTree
 
         public void RemoveEvent(string evt)
         {
-            if (Events == null)
-                Events = new List<string>();
-
             if (Events.Contains(evt))
                 Events.Remove(evt);
         }

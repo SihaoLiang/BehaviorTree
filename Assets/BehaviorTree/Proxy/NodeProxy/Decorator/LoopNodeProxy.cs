@@ -16,10 +16,10 @@ namespace BehaviorTree
         public override void OnAwake()
         {
 
-            if (Node.NodeDatas == null || Node.NodeDatas["LoopTimes"] == null)
+            if (Node.Fields == null || Node.Fields["LoopTimes"] == null)
                 return;
 
-            IntField field = Node.NodeDatas["LoopTimes"] as IntField;
+            IntField field = Node.Fields["LoopTimes"] as IntField;
             LoopTimes = field.Value;
         }
 

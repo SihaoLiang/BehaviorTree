@@ -11,7 +11,7 @@ namespace BehaviorTree
         public NodeProxyInfo NodeProxyInfo;
 
         public string[] Events = null;
-
+        public abstract void SetNode(BaseNode baseNode);
         public abstract void OnAwake();
         public abstract void OnEnter();
         public abstract void OnExit();
