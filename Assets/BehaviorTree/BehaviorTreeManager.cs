@@ -128,7 +128,7 @@ namespace BehaviorTree
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public BehaviorTree GetBehaviorTreeById(string id, Agent agent)
+        public BehaviorTree GetBehaviorTreeById(string id)
         {
             if (!CheckBehaviorTreeDataExist(id))
             {
@@ -148,13 +148,11 @@ namespace BehaviorTree
                     return null;
                 }
 
-                behaviorTree = new BehaviorTree(agentData, agent);
+                behaviorTree = new BehaviorTree(agentData);
                 behaviorTree.Id = agentData.ID;
                 behaviorTree.OnAwake();
             }
 
-            behaviorTree.OnEnable();
-            agent.BTree = behaviorTree;
             return behaviorTree;
         }
 

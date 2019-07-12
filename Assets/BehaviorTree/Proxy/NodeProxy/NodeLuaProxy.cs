@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviorTreeData;
 using UnityEngine;
-#if XLUA
+#if CLIENT
 using XLua;
 #endif
 
@@ -20,7 +20,6 @@ namespace BehaviorTree
             this.Node = baseNode;
             this.NodeProxyInfo = baseNode.NodeInfo;
 #if XLUA
-        
             if (NewFunc == null)
                 NewFunc = XLuaEngine.Get<Func<string, NodeLuaProxy, ILuaNodeProxy>>("XLuaBehaviorManager.NewLuaNodeProxy");
 
@@ -68,6 +67,16 @@ namespace BehaviorTree
         public override string[] OnGetEvents()
         {
             return LuaNodeProxy?.OnGetEvents();
+        }
+
+        public override void OnEnable()
+        {
+            LuaNodeProxy?.OnEnable();
+        }
+
+        public override void OnDisable()
+        {
+            LuaNodeProxy?.OnDisable();
         }
 
         public override void OnNotify(string evt, params object[] args)

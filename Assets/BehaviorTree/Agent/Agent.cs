@@ -8,6 +8,13 @@ namespace BehaviorTree {
     public class Agent : MonoBehaviour {
 
         /// <summary>
+        /// ID
+        /// </summary>
+        public int ID
+        {
+            get { return gameObject.GetHashCode(); }
+        }
+        /// <summary>
         /// 执行主体代理器
         /// </summary>
         public AgentProxy Proxy;
@@ -21,6 +28,11 @@ namespace BehaviorTree {
         /// 行为树
         /// </summary>
         public BehaviorTree BTree;
+
+        /// <summary>
+        /// 公共参数
+        /// </summary>
+        public Dictionary<string, BaseField> VarDic = new Dictionary<string, BaseField>();
 
         /// <summary>
         /// 初始化代理器
@@ -136,20 +148,16 @@ namespace BehaviorTree {
                 BehaviorTreeManager.Instance.DisableBehaviorTree(BTree);
 
             //创建行为树
-            BTree = BehaviorTreeManager.Instance.GetBehaviorTreeById(id,this);
-
-            //初始化AgentData字段
-            if (BTree.BTAgentData != null && BTree.BTAgentData.Fields != null)
+            BTree = BehaviorTreeManager.Instance.GetBehaviorTreeById(id);
+            if (BTree == null)
             {
-                List<BaseField> fields = BTree.BTAgentData.Fields;
-                for (int index = 0; index < fields.Count; index++)
-                {
-                    SetVarDicByKey(fields[index].FieldName, fields[index]);
-                }
+                Debug.LogError($"创建行为树失败 Id:{id}");
+                return;
             }
 
+            BTree.SetAgent(this);
+            BTree.OnEnable();
         }
-
 
         /// <summary>
         /// 获取公共参数
@@ -158,7 +166,11 @@ namespace BehaviorTree {
         /// <returns></returns>
         public BaseField GetVarDicByKey(string key)
         {
-           return Proxy?.GetVarDicByKey(key);
+            BaseField baseField = null;
+            if (!VarDic.TryGetValue(key, out baseField))
+                Debug.LogError($"找不到公共参数 KEY:{key}");
+
+            return baseField;
         }
 
         /// <summary>
@@ -168,7 +180,22 @@ namespace BehaviorTree {
         /// <param name="baseFiled"></param>
         public void SetVarDicByKey(string key, BaseField baseFiled)
         {
-            Proxy?.SetVarDicByKey(key, baseFiled);
+            if (!VarDic.ContainsKey(key))
+                VarDic.Add(key, baseFiled);
+            else
+                VarDic[key] = baseFiled;
         }
+
+
+        /// <summary>
+        /// 设置公共参数
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="baseFiled"></param>
+        public void ClearVarDic()
+        {
+            VarDic.Clear();
+        }
+
     }
 }

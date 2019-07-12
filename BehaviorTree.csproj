@@ -284,6 +284,7 @@
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Reader.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Serializer.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Serialize\Writer.cs" />
+    <Compile Include="Assets\BehaviorTree\BehaviorTreeEventManager.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeManager.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreePool.cs" />
     <Compile Include="Assets\BehaviorTree\Node\BaseActionNode.cs" />

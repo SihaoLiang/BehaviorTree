@@ -20,7 +20,17 @@ namespace BehaviorTree
         /// <summary>
         /// 节点状态
         /// </summary>
-        public NodeStatus Status = NodeStatus.READY;
+        NodeStatus NodeState = NodeStatus.READY;
+        public NodeStatus Status {
+            get { return NodeState; }
+            set {
+                if (NodeState == value)
+                    return;
+
+                NodeState = value;
+                BehaviorTreeEventManager.Instance.OnNodeStateChange(BTree.Id, ID, NodeInfo.ClassType, NodeState, NodeInfo.behaviorNodeType, NodeInfo.IsLua);
+            }
+        } 
 
         /// <summary>
         /// 父节点
@@ -30,7 +40,11 @@ namespace BehaviorTree
         /// <summary>
         /// 执行者
         /// </summary>
-        public Agent NodeAgent;
+        public Agent NodeAgent {
+            get {
+                return BTree?.BTAgent;
+            }
+        }
 
         /// <summary>
         /// 代理
@@ -43,14 +57,18 @@ namespace BehaviorTree
         public NodeProxyInfo NodeInfo;
 
         /// <summary>
+        /// 行为树
+        /// </summary>
+        public BehaviorTree BTree;
+
+        /// <summary>
         /// 初始化代理器
         /// </summary>
-        public void InitNode(NodeData nodeData, Agent agent)
+        public void InitNode(NodeData nodeData, BehaviorTree behaviorTree)
         {
             this.ID = nodeData.ID;
             this.Fields = nodeData;
-            this.NodeAgent = agent;
-
+            this.BTree = behaviorTree;
             InitProxy();
         }
 
@@ -117,8 +135,20 @@ namespace BehaviorTree
             Proxy.SetNode(this);
         }
 
+        public virtual void Enable()
+        {
+            Proxy?.OnEnable(); 
+        }
+
+        public virtual void Disable()
+        {
+            Proxy?.OnDisable();
+        }
+
+
         public virtual void Enter()
         {
+            BehaviorTreeEventManager.Instance.OnNodeEnter(BTree.Id, ID, NodeInfo.ClassType, NodeInfo.IsLua);
             OnEnter();
 
             string[] events = OnGetEvents();
@@ -165,7 +195,7 @@ namespace BehaviorTree
         {
             if (Status == NodeStatus.ERROR)
             {
-                Debug.LogError($"行为节点出错！！！！ClassType:{NodeInfo.ClassType} IsLua:{NodeInfo.IsLua}");
+                BehaviorTreeEventManager.Instance.OnNodeError(BTree.Id, ID, NodeInfo.ClassType, NodeInfo.IsLua);
                 return;
             }
 
@@ -199,6 +229,8 @@ namespace BehaviorTree
         /// </summary>
         public virtual void Exit()
         {
+            BehaviorTreeEventManager.Instance.OnNodeExit(BTree.Id, ID, NodeInfo.ClassType, NodeInfo.IsLua);
+
             string[] events = OnGetEvents();
             if (events != null && events.Length > 0)
             {

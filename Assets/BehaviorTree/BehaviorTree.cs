@@ -14,7 +14,7 @@ namespace BehaviorTree {
         /// <summary>
         /// 行为树全部数据
         /// </summary>
-        public AgentData BTAgentData;
+        public AgentData BTAgenData;
         
         /// <summary>
         /// 行为树开始节点
@@ -40,17 +40,23 @@ namespace BehaviorTree {
         /// 构造
         /// </summary>
         /// <param name="agentData"></param>
-        public BehaviorTree(AgentData agentData,Agent agent)
+        public BehaviorTree(AgentData agentData)
         {
             if (agentData == null || agentData.StartNode == null)
             {
                 Debug.LogError("行为树数据加载异常!!!!");
                 return;
             }
-            BTAgent = agent;
-            BTAgentData = agentData;
+            BTAgenData = agentData;
             BuildBehaviorTreeNodes();
         }
+
+
+        public void SetAgent(Agent agent)
+        {
+            BTAgent = agent;           
+        }
+
 
         /// <summary>
         /// 构建行为树
@@ -60,7 +66,7 @@ namespace BehaviorTree {
         protected void BuildBehaviorTreeNodes()
         {
             AllNodes.Clear();
-            StartNode = BuildBehaviorTreeRecursive(BTAgentData.StartNode);
+            StartNode = BuildBehaviorTreeRecursive(BTAgenData.StartNode);
         }
 
         /// <summary>
@@ -106,7 +112,7 @@ namespace BehaviorTree {
         {
             string nodeType = nodeData.ClassType;
             BaseNode baseNode = BaseNode.GetBaseNode(nodeData.ClassType);
-            baseNode.InitNode(nodeData, BTAgent);
+            baseNode.InitNode(nodeData,this);
             return baseNode;
         }
 
@@ -139,11 +145,12 @@ namespace BehaviorTree {
 
         public void OnBegin()
         {
-
+            BehaviorTreeEventManager.Instance.OnBehaviorTreeBegin(Id);
         }
 
         public void OnEnd()
         {
+            BehaviorTreeEventManager.Instance.OnBehaviorTreeEnd(Id);
         }
 
         /// <summary>
@@ -190,6 +197,17 @@ namespace BehaviorTree {
         public void OnEnable()
         {
             IsEnable = true;
+
+            if (AllNodes == null || AllNodes.Count <= 0)
+                return;
+
+            for (int index = 0; index < AllNodes.Count; index++)
+            {
+                BaseNode baseNode = AllNodes[index];
+                baseNode.Enable();
+            }
+
+            BehaviorTreeEventManager.Instance.OnBehaviorTreeEnable(Id);
         }
 
         /// <summary>
@@ -197,14 +215,16 @@ namespace BehaviorTree {
         /// </summary>
         public void OnDisable()
         {
+            BehaviorTreeEventManager.Instance.OnBehaviorTreeDiable(Id);
+
+            DisableAllNode();
             IsEnable = false;
-            ResetAllNode();
         }
 
         /// <summary>
         ///入池的时候重置所有节点
         /// </summary>
-        public void ResetAllNode()
+        public void DisableAllNode()
         {
             if (AllNodes == null || AllNodes.Count <= 0)
                 return;
@@ -212,9 +232,35 @@ namespace BehaviorTree {
             for (int index = 0; index < AllNodes.Count; index++)
             {
                 BaseNode baseNode = AllNodes[index];
-                baseNode.OnExit();
-                baseNode.OnReset();
+
+                if (baseNode.Status != NodeStatus.READY)
+                {
+                    baseNode.OnExit();
+                    baseNode.OnReset();
+                }
+                baseNode.Disable();
             }
         }
+
+        /// <summary>
+        /// 获取行为树的本地数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public BaseField GetLocalField(string key)
+        {
+            if (BTAgenData.Fields != null && BTAgenData.Fields != null)
+            {
+                List<BaseField> fields = BTAgenData.Fields;
+                for (int index = 0; index < fields.Count; index++)
+                {
+                    if (key == fields[index].FieldName)
+                        return fields[index];
+                }
+            }
+
+            return null;
+        }
+
     }
 }

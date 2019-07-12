@@ -10,6 +10,10 @@ namespace BehaviorTree
     {
         void OnAwake();
 
+        void OnEnable();
+
+        void OnDisable();
+       
         void OnEnter();
 
         void OnExit();
