@@ -1,10 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace BehaviorTree
+﻿namespace BehaviorTree
 {
-
     public class AgentProxyTypeInfo
     {
         public string AgentName;

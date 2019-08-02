@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 namespace BehaviorTree
 {
     /// <summary>
     /// 取反节点
     /// </summary>
-    [BehaviorNode("Not", BehaviorNodeType.Decorator)]
+    [NodeProxy("Not", BehaviorNodeType.Decorator)]
     public class NotNodeProxy : NodeCsProxy
     {
         public override void OnUpdate(float deltaTime)

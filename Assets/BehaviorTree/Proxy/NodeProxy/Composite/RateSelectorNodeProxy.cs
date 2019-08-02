@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using BehaviorTreeData;
 
 namespace BehaviorTree
 {
-    [BehaviorNode("RateSelector",BehaviorNodeType.Composite)]
+    [NodeProxy("RateSelector",BehaviorNodeType.Composite)]
     public class RateSelectorNodeProxy : NodeCsProxy
     {
         List<int> PriorityList;

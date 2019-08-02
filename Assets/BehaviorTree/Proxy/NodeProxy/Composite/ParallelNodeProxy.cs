@@ -1,9 +1,7 @@
 using BehaviorTreeData;
-using System;
-using System.Collections.Generic;
 
 namespace BehaviorTree
-{ 
+{
     /// <summary>
     /// 创建这个节点的时候需要传入一个节点队列。一个接一个的运行子节点。
     /// 失败条件：FAIL_ON_ONE
@@ -18,20 +16,19 @@ namespace BehaviorTree
     /// 否则他会将自己标识为RUNNING。
     /// </summary>
 
- [BehaviorNode("Parallel", BehaviorNodeType.Composite)]
-public class ParallelNodeProxy : NodeCsProxy
+    [NodeProxy("Parallel", BehaviorNodeType.Composite)]
+    public class ParallelNodeProxy : NodeCsProxy
     {
-
         int FailPolicy = -1;
         int SucceedPolicy = -1;
-          
+
         public override void OnAwake()
         {
-            EnumField enumFieldFailPolicy = Node.Fields["FailPolicy"] as EnumField;
+            EnumField enumFieldFailPolicy = Node.Fields["FailType"] as EnumField;
             FailPolicy = enumFieldFailPolicy.Value;
 
-            EnumField enumFieldSucceedPolicy = Node.Fields["SucceedPolicy"] as EnumField;
-            FailPolicy = enumFieldFailPolicy.Value;
+            EnumField enumFieldSucceedPolicy = Node.Fields["SuccessType"] as EnumField;
+            SucceedPolicy = enumFieldSucceedPolicy.Value;
         }
 
 
@@ -52,7 +49,7 @@ public class ParallelNodeProxy : NodeCsProxy
                 {
                     failCount++;
 
-                    if (SucceedPolicy == (int)FAILURE_POLICY.FAIL_ON_ONE)
+                    if (FailPolicy == (int)FAILURE_POLICY.FAIL_ON_ONE)
                     {
                         Node.Status = NodeStatus.FAILED;
                         break;
@@ -85,6 +82,10 @@ public class ParallelNodeProxy : NodeCsProxy
                     break;
                 }
             }
-        }     
+
+            if ((failCount + successCound) == compositeNode.Children.Count)
+                Node.Status = NodeStatus.SUCCESS;
+
+        }
     }
 }

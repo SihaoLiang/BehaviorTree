@@ -1,14 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
+﻿
 namespace BehaviorTree
 {
     /// <summary>
     /// 第一个节点为条件
     /// </summary>
-    [BehaviorNode("IfElse", BehaviorNodeType.Composite)]
+    [NodeProxy("IfElse", BehaviorNodeType.Composite)]
     public class IfElseNodeProxy : NodeCsProxy
     {
         int CurrentRunningIndex = -1;

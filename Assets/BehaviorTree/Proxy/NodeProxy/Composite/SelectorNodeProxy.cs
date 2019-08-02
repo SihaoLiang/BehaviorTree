@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 
 namespace BehaviorTree
 {
@@ -12,7 +10,7 @@ namespace BehaviorTree
     /// 任何一个节点都没有返回SUCCESS的情况下，他将会将自身标识成为FAILED并且返回
     /// </summary>
     
-    [BehaviorNode("Selector", BehaviorNodeType.Composite)]
+    [NodeProxy("Selector", BehaviorNodeType.Composite)]
     public class SelectorNodeProxy : NodeCsProxy
     {
 

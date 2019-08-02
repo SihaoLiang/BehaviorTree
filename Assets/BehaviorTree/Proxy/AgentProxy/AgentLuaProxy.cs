@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-namespace BehaviorTree {
-    public class AgentLuaProxy : AgentProxy {
+namespace BehaviorTree
+{
+    public class AgentLuaProxy : AgentProxy
+    {
 
         public ILuaAgentProxy LuaAgentProxy = null;
         static Func<string, AgentLuaProxy, ILuaAgentProxy> NewFunc = null;
@@ -13,7 +13,7 @@ namespace BehaviorTree {
             BTAgent = agent;
 #if XLUA
             if (NewFunc == null)
-                NewFunc = XLuaEngine.Get<Func<string, AgentLuaProxy, ILuaAgentProxy>>("XLuaBehaviorManager.NewLuaAgentProxy");
+                NewFunc = XLuaEngine.Get<Func<string, XAgentLuaProxy, ILuaAgentProxy>>("XLuaBehaviorManager.NewLuaAgentProxy");
 
             if (NewFunc != null)
                 LuaAgentProxy = NewFunc(classType, this);
@@ -35,11 +35,13 @@ namespace BehaviorTree {
 
         public override void OnEnable()
         {
+            base.OnEnable();
             LuaAgentProxy?.OnEnable();
         }
 
         public override void OnDisable()
         {
+            base.OnDisable();
             LuaAgentProxy?.OnDisable();
         }
 
@@ -73,5 +75,6 @@ namespace BehaviorTree {
         {
             LuaAgentProxy?.OnNotify(evt, args);
         }
+
     }
 }

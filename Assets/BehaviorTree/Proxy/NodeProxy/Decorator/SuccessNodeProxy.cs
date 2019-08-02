@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 namespace BehaviorTree
 {
     /// <summary>
     /// 成功节点
     /// </summary>
-    [BehaviorNode("Success", BehaviorNodeType.Decorator)]
+    [NodeProxy("Success", BehaviorNodeType.Decorator)]
     public class SuccessNodeProxy : NodeCsProxy
     {
         public override void OnUpdate(float deltaTime)

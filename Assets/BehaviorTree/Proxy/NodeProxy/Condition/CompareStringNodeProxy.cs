@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 using BehaviorTreeData;
 
 namespace BehaviorTree
@@ -8,7 +6,7 @@ namespace BehaviorTree
     /// <summary>
     /// 对比String
     /// </summary>
-    [BehaviorNode("CompareString", BehaviorNodeType.Condition)]
+    [NodeProxy("CompareString", BehaviorNodeType.Condition)]
     public class CompareStringNodeProxy : CompareNodeProxy
     {
         protected string LeftField;

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace BehaviorTree
+﻿namespace BehaviorTree
 {
     public interface ILuaAgentProxy
     {
@@ -23,7 +19,7 @@ namespace BehaviorTree
         void OnUpdate();
 
 
-       // void OnFixedUpdate(float dedeltaTime);
+        // void OnFixedUpdate(float dedeltaTime);
 
         string[] OnGetEvents();
 

@@ -1,13 +1,11 @@
 ﻿using BehaviorTreeData;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 namespace BehaviorTree
 {
     /// <summary>
     /// 赋值节点
     /// </summary>
-    [BehaviorNode("Assignment", BehaviorNodeType.Action)]
+    [NodeProxy("Assignment", BehaviorNodeType.Action)]
     public class AssignmentNodeProxy : NodeCsProxy
     {
         BaseField AssignmentValue = null;

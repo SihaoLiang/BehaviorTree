@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTreeData;
 
 namespace BehaviorTree
 {
-    public class AgentProxy 
+    public class AgentProxy
     {
         public Agent BTAgent = null;
 
@@ -14,13 +12,14 @@ namespace BehaviorTree
         /// </summary>
         public GameObject gameObject
         {
-            get {
+            get
+            {
                 if (BTAgent != null)
                     return BTAgent.gameObject;
                 return null;
             }
         }
-   
+
         /// <summary>
         /// 行为树
         /// </summary>
@@ -33,17 +32,18 @@ namespace BehaviorTree
                 return null;
             }
         }
-      
+
         /// <summary>
         /// 监听的事件
         /// </summary>
         public List<string> Events = new List<string>();
-        
-        public virtual void OnStart() {
-           
+
+        public virtual void OnStart()
+        {
+
         }
 
-        public virtual void SetAgent(Agent agent,string classType)
+        public virtual void SetAgent(Agent agent, string classType)
         {
 
         }
@@ -53,9 +53,16 @@ namespace BehaviorTree
             BTree?.OnAwake();
         }
 
-        public virtual void OnEnable() { }
+        public virtual void OnEnable()
+        {
+            if (BTree != null && !BTree.IsEnable)
+                BTree.OnEnable();
+        }
 
-        public virtual void OnDisable() { }
+        public virtual void OnDisable()
+        {
+            BTree?.OnDisable();
+        }
 
         public virtual void OnDestroy()
         {
@@ -77,9 +84,9 @@ namespace BehaviorTree
             return Events;
         }
 
-        public virtual void OnNotify(string evt, params object[] args) {}
+        public virtual void OnNotify(string evt, params object[] args) { }
 
-       
+
         public void AddEvent(string evt)
         {
             if (!Events.Contains(evt))

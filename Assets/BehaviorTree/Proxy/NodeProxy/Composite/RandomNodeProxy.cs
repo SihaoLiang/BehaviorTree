@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-
+using UnityEngine;
 
 namespace BehaviorTree
 {
@@ -11,7 +9,7 @@ namespace BehaviorTree
     /// PS：权重的个数可以与子节点列表的个数不同。权重个数不足的将以1填充，超过的部分会被截断
     /// </summary>
 
-    [BehaviorNode("Random", BehaviorNodeType.Composite)]
+    [NodeProxy("Random", BehaviorNodeType.Composite)]
     public class RandomNodeProxy : NodeCsProxy
     {
         BaseCompositeNode CompositeNode = null;
@@ -22,6 +20,7 @@ namespace BehaviorTree
 
         public override void OnEnter()
         {
+            UnityEngine.Random.InitState(Time.frameCount);
             CompositeNode.RunningNodeIndex = UnityEngine.Random.Range(0, CompositeNode.Children.Count);
         }
 

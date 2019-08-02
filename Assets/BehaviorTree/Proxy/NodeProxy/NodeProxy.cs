@@ -1,9 +1,4 @@
-﻿using BehaviorTreeData;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace BehaviorTree
+﻿namespace BehaviorTree
 {
     public abstract class NodeProxy
     {
@@ -12,6 +7,7 @@ namespace BehaviorTree
 
         public string[] Events = null;
         public abstract void SetNode(BaseNode baseNode);
+        public abstract void SetAgent();
         public abstract void OnAwake();
         public abstract void OnEnable();
         public abstract void OnEnter();
@@ -19,6 +15,7 @@ namespace BehaviorTree
         public abstract void OnExit();
         public abstract void OnDestroy();
         public abstract void OnReset();
+        public abstract void OnRecycle();
         public abstract void OnUpdate(float deltaTime);
         public abstract void OnFixedUpdate(float deltaTime);
         public abstract string[] OnGetEvents();

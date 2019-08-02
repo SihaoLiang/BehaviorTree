@@ -1,14 +1,14 @@
 ﻿using System;
 namespace BehaviorTree
 {
-    public class BehaviorNodeAttribute : Attribute
+    public class NodeProxyAttribute : Attribute
     {
 
         public string ClassType;
         public BehaviorNodeType NodeType;
         public bool NeedUpdate;
 
-        public BehaviorNodeAttribute(string classType, BehaviorNodeType nodeType,bool needUpdate = true)
+        public NodeProxyAttribute(string classType, BehaviorNodeType nodeType, bool needUpdate = true)
         {
             ClassType = classType;
             NodeType = nodeType;

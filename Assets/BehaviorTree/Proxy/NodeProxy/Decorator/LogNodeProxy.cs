@@ -7,7 +7,7 @@ namespace BehaviorTree
     /// <summary>
     /// 输出节点
     /// </summary>
-    [BehaviorNode("Log",BehaviorNodeType.Decorator)]
+    [NodeProxy("Log",BehaviorNodeType.Decorator)]
     public class LogNodeProxy : NodeCsProxy
     {
         string LogContent = string.Empty;
@@ -16,7 +16,7 @@ namespace BehaviorTree
             if (Node.Fields == null || Node.Fields["Content"] == null)
                 return;
 
-            // Node.NodeDatas["Content"].
+            LogContent = Node.Fields["Content"] as StringField;
         }
         public override void OnUpdate(float deltaTime)
         {

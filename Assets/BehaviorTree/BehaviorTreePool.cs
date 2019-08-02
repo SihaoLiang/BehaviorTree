@@ -6,7 +6,7 @@ namespace BehaviorTree
 {
     public class BehaviorTreePool : MonoBehaviour
     {
-        Dictionary<string, List<BehaviorTree>> Pools = new Dictionary<string,List<BehaviorTree>>();
+        Dictionary<string, List<BehaviorTree>> Pools = new Dictionary<string, List<BehaviorTree>>();
 
         /// <summary>
         /// 从池中获取行为树
@@ -26,7 +26,10 @@ namespace BehaviorTree
             List<BehaviorTree> behaviorTrees = Pools[id];
 
             if (behaviorTrees.Count > 0)
-                behaviorTree = behaviorTrees[0];
+            {
+                behaviorTree = behaviorTrees[behaviorTrees.Count - 1];
+                behaviorTrees.RemoveAt(behaviorTrees.Count - 1);
+            }
 
             return behaviorTree;
         }
@@ -40,8 +43,6 @@ namespace BehaviorTree
             string id = behaviorTree.Id;
             if (!Pools.ContainsKey(id))
                 Pools.Add(id, new List<BehaviorTree>());
-
-            behaviorTree.BTAgent = null;
 
             Pools[id].Add(behaviorTree);
         }

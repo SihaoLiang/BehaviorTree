@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTreeData;
 using System;
@@ -26,13 +25,20 @@ namespace BehaviorTree
         private readonly Dictionary<string, AgentProxyTypeInfo> RegistedCsAgentProxyTypeDic = new Dictionary<string, AgentProxyTypeInfo>();
         private readonly Dictionary<string, AgentProxyTypeInfo> RegistedLuaAgentProxyTypeDic = new Dictionary<string, AgentProxyTypeInfo>();
 
-
-        Dictionary<string, List<Agent>> ActiveAgents = new Dictionary<string, List<Agent>>();
-
         /// <summary>
         /// 行为树池
         /// </summary>
         BehaviorTreePool Pools = null;
+
+        /// <summary>
+        /// 数据地址
+        /// </summary>
+        List<string> DataSources = new List<string>
+        {
+            "Assets/Product/Behavior/Guide/GuideData.bytes",
+            "Assets/Product/Behavior/Dormitory/DormitoryData.bytes"
+        };
+
 
         /// <summary>
         /// 初始化从本地加载数据
@@ -42,8 +48,7 @@ namespace BehaviorTree
         {
             InitTypes();
             InitBehaviorTreePool();
-            Load();
-            return true;
+            return Load();
         }
 
         /// <summary>
@@ -53,26 +58,73 @@ namespace BehaviorTree
         {
             if (Pools == null)
             {
-                GameObject gameObject = new GameObject("BehaviorTreePool",typeof(BehaviorTreePool));
+                GameObject gameObject = new GameObject("BehaviorTreePool", typeof(BehaviorTreePool));
                 Pools = gameObject.GetComponent<BehaviorTreePool>();
             }
         }
 
-        public void Load()
+        /// <summary>
+        /// 添加数据源
+        /// </summary>
+        /// <param name="path"></param>
+        public void AddDataSource(string path)
+        {
+            if (DataSources == null)
+                DataSources = new List<string>();
+
+            if (DataSources.Contains(path))
+                return;
+
+            DataSources.Add(path);
+        }
+
+        /// <summary>
+        /// 加载数据
+        /// </summary>
+        /// <returns></returns>
+        public bool Load()
         {
             AgentDataDic.Clear();
-            TextAsset textAsset = Resources.Load("BehaviorTreeData") as TextAsset;
-            TreeData treeData = Serializer.DeSerialize<TreeData>(textAsset.bytes);
-            if (treeData == null || treeData.Agents == null)
+
+            if (DataSources == null || DataSources.Count == 0)
             {
-                Debug.LogError("Serializer.DeSerialize Error");
-                return;
+                Debug.LogError($"XBehaviorTreeManager.Init() Error:LoadFail DataSources is empty");
+                return false;
             }
-            for (int index = 0; index < treeData.Agents.Count; index++)
+
+            for (int i = 0; i < DataSources.Count; i++)
             {
-                AgentData agentData = treeData.Agents[index];
-                AgentDataDic.Add(agentData.ID, agentData);
+                string dataUrl = DataSources[i];
+                //IResource resource = ResourceManager.Load(dataUrl);
+                //if (resource == null || !resource.Asset)
+                //{
+                //    XLog.Error($"XBehaviorTreeManager.Init() Error:LoadFail:[{dataUrl}]");
+                //    return false;
+                //}
+
+                TextAsset textAsset = null;
+                TreeData treeData = Serializer.DeSerialize<TreeData>(textAsset.bytes);
+
+
+                if (treeData == null || treeData.Agents == null)
+                {
+                    Debug.LogError($"XBehaviorTreeManager.Init() Error:{dataUrl} Serializer.DeSerialize Error");
+                    return false;
+                }
+
+                for (int index = 0; index < treeData.Agents.Count; index++)
+                {
+                    AgentData agentData = treeData.Agents[index];
+                    if (AgentDataDic.ContainsKey(agentData.ID))
+                    {
+                        Debug.LogError($"XBehaviorTreeManager.Init() Error:Id Conflict Id:[{agentData.ID}]");
+                        return false;
+                    }
+                    AgentDataDic.Add(agentData.ID, agentData);
+                }
             }
+
+            return true;
         }
 
         /// <summary>
@@ -98,12 +150,6 @@ namespace BehaviorTree
         /// <returns></returns>
         public BehaviorTree GetBehaviorTreeFromPool(string id)
         {
-            if (Pools == null)
-            {
-                Pools = Activator.CreateInstance<BehaviorTreePool>();
-                Pools.name = "BehaviorTreePool";
-            }
-
             return Pools.Spawn(id);
         }
 
@@ -113,13 +159,9 @@ namespace BehaviorTree
         /// <param name="behaviorTree"></param>
         public void DisableBehaviorTree(BehaviorTree behaviorTree)
         {
-            if (Pools == null)
-            {
-                Pools = Activator.CreateInstance<BehaviorTreePool>();
-                Pools.name = "BehaviorTreePool";
-            }
-
             behaviorTree.OnDisable();
+            behaviorTree.OnRecycle();
+            behaviorTree.BTAgent = null;
             Pools.DeSpawn(behaviorTree);
         }
 
@@ -140,7 +182,7 @@ namespace BehaviorTree
             BehaviorTree behaviorTree = GetBehaviorTreeFromPool(id);
             if (behaviorTree == null)
             {
-                AgentData agentData = AgentDataDic[id].Clone();
+                AgentData agentData = AgentDataDic[id];
 
                 if (agentData == null)
                 {
@@ -161,7 +203,8 @@ namespace BehaviorTree
         /// </summary>
         /// <param name="classType">节点名字，唯一</param>
         /// <param name="nodeType">节点类型</param>
-        /// <param name="isLua">Lua节点</param>
+        /// <param name="isLua">是否Lua节点</param>
+        /// <param name="needUpdate">是否Update</param>
         public void RegisterCsNodeProxy(string classType, BehaviorNodeType nodeType, bool isLua, bool needUpdate)
         {
             if (RegistedCsNodeProxyTypeDic.ContainsKey(classType))
@@ -184,9 +227,9 @@ namespace BehaviorTree
         /// <summary>
         /// 注册Lua节点代理
         /// </summary>
-        /// <param name="classType">节点名字，唯一</param>
-        /// <param name="nodeType">节点类型</param>
-        /// <param name="isLua">Lua节点</param>
+        /// <param name="classType">代理名字，唯一</param>
+        /// <param name="nodeType">代理类型</param>
+        /// <param name="isLua">是否Lua代理</param>
         public void RegisterLuaNodeProxy(string classType, BehaviorNodeType nodeType, bool isLua, bool needUpdate)
         {
             if (RegistedLuaNodeProxyTypeDic.ContainsKey(classType))
@@ -257,10 +300,10 @@ namespace BehaviorTree
             {
                 Type type = types[i];
 
-                object[] nodeAttributes = type.GetCustomAttributes(typeof(BehaviorNodeAttribute), false);
+                object[] nodeAttributes = type.GetCustomAttributes(typeof(NodeProxyAttribute), false);
                 foreach (object attribute in nodeAttributes)
                 {
-                    BehaviorNodeAttribute nodeAttribute = attribute as BehaviorNodeAttribute;
+                    NodeProxyAttribute nodeAttribute = attribute as NodeProxyAttribute;
                     if (nodeAttribute == null)
                         continue;
 

@@ -1,19 +1,16 @@
-﻿using BehaviorTreeData;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
+﻿
 namespace BehaviorTree
 {
     public interface ILuaNodeProxy
     {
         void OnAwake();
 
+        void SetAgent();
+
         void OnEnable();
 
         void OnDisable();
-       
+
         void OnEnter();
 
         void OnExit();
@@ -24,11 +21,14 @@ namespace BehaviorTree
 
         void OnReset();
 
+        void OnRecycle();
+
         void OnUpdate(float deltaTime);
 
         void OnFixedUpdate(float deltaTime);
 
         string[] OnGetEvents();
+
 
         void OnNotify(string evt, params object[] args);
     }

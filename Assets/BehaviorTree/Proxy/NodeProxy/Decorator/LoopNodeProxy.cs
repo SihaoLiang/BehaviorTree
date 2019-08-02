@@ -1,13 +1,11 @@
 ﻿using BehaviorTreeData;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 namespace BehaviorTree
 {
     /// <summary>
     /// 循环节点 -1无限循环
     /// </summary>
-    [BehaviorNode("Loop", BehaviorNodeType.Decorator)]
+    [NodeProxy("Loop", BehaviorNodeType.Decorator)]
     public class LoopNodeProxy : NodeCsProxy {
 
         int LoopTimes = 0;

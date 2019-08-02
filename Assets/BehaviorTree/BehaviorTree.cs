@@ -10,12 +10,12 @@ namespace BehaviorTree {
         /// 行为树Id
         /// </summary>
         public string Id;
-        
+
         /// <summary>
         /// 行为树全部数据
         /// </summary>
         public AgentData BTAgenData;
-        
+
         /// <summary>
         /// 行为树开始节点
         /// </summary>
@@ -54,7 +54,16 @@ namespace BehaviorTree {
 
         public void SetAgent(Agent agent)
         {
-            BTAgent = agent;           
+            BTAgent = agent;
+
+            if (AllNodes == null || AllNodes.Count <= 0)
+                return;
+
+            for (int index = 0; index < AllNodes.Count; index++)
+            {
+                BaseNode baseNode = AllNodes[index];
+                baseNode.SetAgent();
+            }
         }
 
 
@@ -112,7 +121,7 @@ namespace BehaviorTree {
         {
             string nodeType = nodeData.ClassType;
             BaseNode baseNode = BaseNode.GetBaseNode(nodeData.ClassType);
-            baseNode.InitNode(nodeData,this);
+            baseNode.InitNode(nodeData, this);
             return baseNode;
         }
 
@@ -127,6 +136,24 @@ namespace BehaviorTree {
                 baseNode.OnAwake();
             }
         }
+
+        /// <summary>
+        /// 回收
+        /// </summary>
+        public void OnRecycle()
+        {
+
+            if (AllNodes == null || AllNodes.Count <= 0)
+                return;
+
+            for (int index = 0; index < AllNodes.Count; index++)
+            {
+                BaseNode baseNode = AllNodes[index];
+                baseNode.OnRecycle();
+            }
+        }
+
+
 
         /// <summary>
         /// 删除的时候触发
@@ -150,7 +177,7 @@ namespace BehaviorTree {
 
         public void OnEnd()
         {
-            BehaviorTreeEventManager.Instance.OnBehaviorTreeEnd(Id);
+           BehaviorTreeEventManager.Instance.OnBehaviorTreeEnd(Id);
         }
 
         /// <summary>
@@ -167,7 +194,7 @@ namespace BehaviorTree {
 
             if (StartNode.Status == NodeStatus.SUCCESS || StartNode.Status == NodeStatus.FAILED)
                 return;
-       
+
             if (StartNode.Status == NodeStatus.READY)
                 OnBegin();
 
@@ -215,7 +242,7 @@ namespace BehaviorTree {
         /// </summary>
         public void OnDisable()
         {
-            BehaviorTreeEventManager.Instance.OnBehaviorTreeDiable(Id);
+            BehaviorTreeEventManager.Instance.OnBehaviorTreeDisable(Id);
 
             DisableAllNode();
             IsEnable = false;
@@ -235,11 +262,19 @@ namespace BehaviorTree {
 
                 if (baseNode.Status != NodeStatus.READY)
                 {
-                    baseNode.OnExit();
-                    baseNode.OnReset();
+                    baseNode.Exit();
                 }
                 baseNode.Disable();
             }
+
+            StartNode.OnReset();
+        }
+
+
+        public void Reset()
+        {
+            if (StartNode != null)
+                StartNode.OnReset();
         }
 
         /// <summary>

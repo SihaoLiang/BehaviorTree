@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-namespace BehaviorTree
+﻿namespace BehaviorTree
 {
     /// <summary>
     /// 阻塞，直到子节点返回true
     /// </summary>
-    [BehaviorNode("WaitUntil", BehaviorNodeType.Decorator)]
+    [NodeProxy("WaitUntil", BehaviorNodeType.Decorator)]
     public class WaitUntilNodeProxy : NodeCsProxy
     {
         public override void OnUpdate(float deltaTime)

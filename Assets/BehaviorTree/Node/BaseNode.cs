@@ -1,6 +1,5 @@
 ﻿using BehaviorTreeData;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviorTree
@@ -21,16 +20,18 @@ namespace BehaviorTree
         /// 节点状态
         /// </summary>
         NodeStatus NodeState = NodeStatus.READY;
-        public NodeStatus Status {
+        public NodeStatus Status
+        {
             get { return NodeState; }
-            set {
+            set
+            {
                 if (NodeState == value)
                     return;
 
                 NodeState = value;
                 BehaviorTreeEventManager.Instance.OnNodeStateChange(BTree.Id, ID, NodeInfo.ClassType, NodeState, NodeInfo.behaviorNodeType, NodeInfo.IsLua);
             }
-        } 
+        }
 
         /// <summary>
         /// 父节点
@@ -40,8 +41,10 @@ namespace BehaviorTree
         /// <summary>
         /// 执行者
         /// </summary>
-        public Agent NodeAgent {
-            get {
+        public Agent NodeAgent
+        {
+            get
+            {
                 return BTree?.BTAgent;
             }
         }
@@ -135,9 +138,14 @@ namespace BehaviorTree
             Proxy.SetNode(this);
         }
 
+        public virtual void SetAgent()
+        {
+            Proxy?.SetAgent();
+        }
+
         public virtual void Enable()
         {
-            Proxy?.OnEnable(); 
+            Proxy?.OnEnable();
         }
 
         public virtual void Disable()
@@ -148,7 +156,7 @@ namespace BehaviorTree
 
         public virtual void Enter()
         {
-            BehaviorTreeEventManager.Instance.OnNodeEnter(BTree.Id, ID, NodeInfo.ClassType, NodeInfo.IsLua);
+            BehaviorTreeEventManager.Instance.OnNodeEnter(NodeAgent.ID, BTree.Id, ID, NodeInfo.ClassType, NodeInfo.behaviorNodeType, NodeInfo.IsLua);
             OnEnter();
 
             string[] events = OnGetEvents();
@@ -167,7 +175,7 @@ namespace BehaviorTree
         /// </summary>
         public virtual void OnEnter()
         {
-            Proxy?.OnEnter();     
+            Proxy?.OnEnter();
         }
 
         /// <summary>
@@ -263,6 +271,12 @@ namespace BehaviorTree
         public virtual void OnDestroy()
         {
             Proxy?.OnDestroy();
+        }
+
+
+        public virtual void OnRecycle()
+        {
+            Proxy?.OnRecycle();
         }
 
         public virtual void OnNotify(string evt, params object[] args)

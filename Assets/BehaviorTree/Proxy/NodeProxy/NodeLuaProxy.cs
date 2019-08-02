@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using BehaviorTreeData;
-using UnityEngine;
-#if CLIENT
-using XLua;
-#endif
 
 namespace BehaviorTree
 {
     public class NodeLuaProxy : NodeProxy
     {
-       // public LuaTable ProxyLuaTable = null;
         public ILuaNodeProxy LuaNodeProxy = null;
         static Func<string, NodeLuaProxy, ILuaNodeProxy> NewFunc = null;
 
@@ -69,6 +61,11 @@ namespace BehaviorTree
             return LuaNodeProxy?.OnGetEvents();
         }
 
+        public override void SetAgent()
+        {
+            LuaNodeProxy?.SetAgent();
+        }
+
         public override void OnEnable()
         {
             LuaNodeProxy?.OnEnable();
@@ -82,6 +79,11 @@ namespace BehaviorTree
         public override void OnNotify(string evt, params object[] args)
         {
             LuaNodeProxy?.OnNotify(evt, args);
+        }
+
+        public override void OnRecycle()
+        {
+            LuaNodeProxy?.OnRecycle();
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using BehaviorTreeData;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 namespace BehaviorTree
 {
     /// <summary>
     /// 对比Int
     /// </summary>
-    [BehaviorNode("CompareInt",BehaviorNodeType.Condition)]
+    [NodeProxy("CompareInt",BehaviorNodeType.Condition)]
     public class CompareIntNodeProxy : CompareNodeProxy
     {
         protected int LeftField;

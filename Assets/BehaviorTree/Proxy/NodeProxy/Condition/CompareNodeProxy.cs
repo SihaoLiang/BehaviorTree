@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BehaviorTreeData;
+﻿using BehaviorTreeData;
 namespace BehaviorTree
 {
-    [BehaviorNode("Compare", BehaviorNodeType.Condition)]
+    [NodeProxy("Compare", BehaviorNodeType.Condition)]
     public class CompareNodeProxy : NodeCsProxy
     {
         protected CompareDataSource LeftType = CompareDataSource.Agent;

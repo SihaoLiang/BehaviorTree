@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 using BehaviorTreeData;
 namespace BehaviorTree
 {
     /// <summary>
     /// 等待节点
     /// </summary>
-    [BehaviorNode("Wait", BehaviorNodeType.Action)]
+    [NodeProxy("Wait", BehaviorNodeType.Action)]
     public class WaitNodeProxy : NodeCsProxy
     {
         int WaitTime = 0;
@@ -21,13 +19,13 @@ namespace BehaviorTree
                 return;
             }
 
-            if (Node.Fields["WaitTime"] == null)
+            if (Node.Fields["Millisecond"] == null)
             {
                 Node.Status = NodeStatus.ERROR;
                 return;
             }
 
-            IntField floatField = Node.Fields["WaitTime"] as IntField;
+            IntField floatField = Node.Fields["Millisecond"] as IntField;
             WaitTime = floatField.Value;
         }
 

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace BehaviorTree
 {
     /// <summary>
@@ -13,7 +10,7 @@ namespace BehaviorTree
     /// 所有节点都返回结尾为SUCCESS那么他会将自身标识成为SUCCESS并且返回。
     /// </summary>
   
-    [BehaviorNode("Sequence", BehaviorNodeType.Composite)]
+    [NodeProxy("Sequence", BehaviorNodeType.Composite)]
     public class SequenceNodeProxy : NodeCsProxy
     {
         public override void OnUpdate(float deltaTime)

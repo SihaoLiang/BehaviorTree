@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTreeData;
 using System;
 
-namespace BehaviorTree {
-    public class Agent : MonoBehaviour {
-
+namespace BehaviorTree
+{
+    public class Agent : MonoBehaviour
+    {
         /// <summary>
         /// ID
         /// </summary>
@@ -32,7 +31,7 @@ namespace BehaviorTree {
         /// <summary>
         /// 公共参数
         /// </summary>
-        public Dictionary<string, BaseField> VarDic = new Dictionary<string, BaseField>();
+        public Dictionary<string, object> VarDic = new Dictionary<string, object>();
 
         /// <summary>
         /// 初始化代理器
@@ -63,12 +62,13 @@ namespace BehaviorTree {
             }
 
             Proxy.SetAgent(this, agentTypeInfo.AgentName);
+            Proxy?.OnAwake();
         }
 
         public virtual void Awake()
         {
-            InitProxy();
-            Proxy?.OnAwake();
+            //  InitProxy();
+            //  Proxy?.OnAwake();
         }
 
 
@@ -79,6 +79,8 @@ namespace BehaviorTree {
 
         private void OnEnable()
         {
+
+
             Proxy?.OnEnable();
 
             if (Proxy != null && Proxy.Events != null)
@@ -93,7 +95,6 @@ namespace BehaviorTree {
 
         private void OnDisable()
         {
-
             if (Proxy != null && Proxy.Events != null)
             {
                 for (int i = 0; i < Proxy.Events.Count; i++)
@@ -120,7 +121,7 @@ namespace BehaviorTree {
             {
                 Proxy?.OnUpdate(Time.deltaTime);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError(ex);
             }
@@ -144,19 +145,29 @@ namespace BehaviorTree {
             }
 
             //上一棵树释放
-            if (BTree != null)
+            if (BTree != null && BTree.Id != id)
+            {
                 BehaviorTreeManager.Instance.DisableBehaviorTree(BTree);
+                BTree = null;
+            }
 
             //创建行为树
-            BTree = BehaviorTreeManager.Instance.GetBehaviorTreeById(id);
+            if (BTree == null)
+                BTree = BehaviorTreeManager.Instance.GetBehaviorTreeById(id);
+
+            BTree.Reset();
+
             if (BTree == null)
             {
                 Debug.LogError($"创建行为树失败 Id:{id}");
                 return;
             }
 
+
+
             BTree.SetAgent(this);
-            BTree.OnEnable();
+            if (isActiveAndEnabled)
+                BTree.OnEnable();
         }
 
         /// <summary>
@@ -164,11 +175,11 @@ namespace BehaviorTree {
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public BaseField GetVarDicByKey(string key)
+        public object GetVarDicByKey(string key)
         {
-            BaseField baseField = null;
+            object baseField = null;
             if (!VarDic.TryGetValue(key, out baseField))
-                Debug.LogError($"找不到公共参数 KEY:{key}");
+                Debug.LogError($"ID{ID} 找不到公共参数 KEY:{key}");
 
             return baseField;
         }
@@ -178,7 +189,7 @@ namespace BehaviorTree {
         /// </summary>
         /// <param name="key"></param>
         /// <param name="baseFiled"></param>
-        public void SetVarDicByKey(string key, BaseField baseFiled)
+        public void SetVarDicByKey(string key, object baseFiled)
         {
             if (!VarDic.ContainsKey(key))
                 VarDic.Add(key, baseFiled);
@@ -197,5 +208,13 @@ namespace BehaviorTree {
             VarDic.Clear();
         }
 
+
+        public bool CheckIsVarDicContainsKey(string key)
+        {
+            if (!VarDic.ContainsKey(key))
+                Debug.LogError($"CheckIsVarDicContainsKey 找不到公共参数 KEY:{key}");
+
+            return VarDic.ContainsKey(key);
+        }
     }
 }

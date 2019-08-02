@@ -253,7 +253,7 @@
     <Compile Include="Assets\BehaviorTree\Agent\Agent.cs" />
     <Compile Include="Assets\BehaviorTree\Agent\AgentTypeInfo.cs" />
     <Compile Include="Assets\BehaviorTree\Attribute\AgentProxyAttribute.cs" />
-    <Compile Include="Assets\BehaviorTree\Attribute\NodeAttribute.cs" />
+    <Compile Include="Assets\BehaviorTree\Attribute\NodeProxyAttribute.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTree.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeConst.cs" />
     <Compile Include="Assets\BehaviorTree\BehaviorTreeData\Data\AgentData.cs" />
@@ -351,6 +351,9 @@
     <Compile Include="Assets\ECS\TimeHelper.cs" />
     <Compile Include="Assets\Script\XGameEventManager.cs" />
     <Compile Include="Assets\Script\XSingleton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Editor\BehaviorTreeDebuger\Editor\Resources\GridLine.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

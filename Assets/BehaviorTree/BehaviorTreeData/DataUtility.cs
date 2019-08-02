@@ -5,6 +5,13 @@ namespace BehaviorTreeData
 {
     public static class DataUtility {
 
+
+
+        public static RepeatVector3Field CreateVector3FieldList()
+        {
+            return null;
+        }
+
         /// <summary>
         /// 复制AgentData
         /// </summary>
@@ -55,6 +62,8 @@ namespace BehaviorTreeData
 
             nodeData.ID = source.ID;
             nodeData.ClassType = source.ClassType;
+            nodeData.X = source.X;
+            nodeData.Y = source.Y;
 
             List<BaseField> fileds = source.Fields;
             if (fileds != null && fileds.Count > 0)

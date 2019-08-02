@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-namespace BehaviorTree
+﻿namespace BehaviorTree
 {
     /// <summary>
     /// 空节点
     /// </summary>
-    [BehaviorNode("EmptyNodeProxy",BehaviorNodeType.Action)]
+    [NodeProxy("Noop", BehaviorNodeType.Action)]
     public class EmptyNodeProxy : NodeCsProxy
     {
         public override void OnEnter()

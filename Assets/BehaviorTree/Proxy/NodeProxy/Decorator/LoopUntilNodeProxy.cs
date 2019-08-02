@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 using BehaviorTreeData;
 namespace BehaviorTree
 {
     /// <summary>
     /// 直到某个值达成前一直循环
     /// </summary>
-    [BehaviorNode("LoopUntil", BehaviorNodeType.Decorator)]
+    [NodeProxy("LoopUntil", BehaviorNodeType.Decorator)]
     public class LoopUntilNodeProxy : NodeCsProxy
     {
         string UntilKey = null;
@@ -39,7 +37,7 @@ namespace BehaviorTree
 
             if (decoratorNode.ChildNode.Status == NodeStatus.FAILED || decoratorNode.ChildNode.Status == NodeStatus.SUCCESS)
             {
-                BaseField baseFiled = Node.NodeAgent.GetVarDicByKey(UntilKey);
+                string baseFiled = (string)Node.NodeAgent.GetVarDicByKey(UntilKey);
                 if (baseFiled == UntilValue)
                     decoratorNode.Status = decoratorNode.ChildNode.Status;
                 else

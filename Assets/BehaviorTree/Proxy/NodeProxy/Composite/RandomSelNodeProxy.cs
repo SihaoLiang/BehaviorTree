@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 namespace BehaviorTree
 {
     /// <summary>
     /// 随机选择
     /// </summary>
-    [BehaviorNode("RandomSelector", BehaviorNodeType.Composite)]
+    [NodeProxy("RandomSelector", BehaviorNodeType.Composite)]
     public class RandomSelNodeProxy : RandomSeqNodeProxy
     {
         public override void OnUpdate(float deltaTime)

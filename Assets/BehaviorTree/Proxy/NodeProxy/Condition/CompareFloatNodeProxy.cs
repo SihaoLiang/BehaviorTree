@@ -7,7 +7,7 @@ namespace BehaviorTree
     /// <summary>
     /// 对比Float
     /// </summary>
-    [BehaviorNode("CompareFloat", BehaviorNodeType.Condition)]
+    [NodeProxy("CompareFloat", BehaviorNodeType.Condition)]
     public class CompareFloatNodeProxy : CompareNodeProxy
     {
         protected float LeftField;

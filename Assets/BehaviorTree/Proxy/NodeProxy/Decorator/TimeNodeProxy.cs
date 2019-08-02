@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BehaviorTreeData;
+﻿using BehaviorTreeData;
 
 namespace BehaviorTree
 {
     /// <summary>
     /// 指定时间内运行
     /// </summary>
-    [BehaviorNode("Time", BehaviorNodeType.Decorator)]
+    [NodeProxy("Time", BehaviorNodeType.Decorator)]
     public class TimeNodeProxy : NodeCsProxy
     {
         int Duration = 0;

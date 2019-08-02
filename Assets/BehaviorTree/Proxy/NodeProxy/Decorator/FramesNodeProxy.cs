@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 using BehaviorTreeData;
 
 namespace BehaviorTree
@@ -8,7 +6,7 @@ namespace BehaviorTree
     /// <summary>
     /// 帧数节点用于在指定的帧数内，持续调用其子节点
     /// </summary>
-    [BehaviorNode("Frames", BehaviorNodeType.Decorator)]
+    [NodeProxy("Frames", BehaviorNodeType.Decorator)]
     public class FramesNodeProxy : NodeCsProxy
     {
         int Frames = -1;

@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-namespace BehaviorTree
+﻿namespace BehaviorTree
 {
     /// <summary>
     /// 失败节点
     /// </summary>
-    [BehaviorNode("Failure", BehaviorNodeType.Decorator)]
+    [NodeProxy("Failure", BehaviorNodeType.Decorator)]
     public class FailureNodeProxy : NodeCsProxy
     {
         public override void OnUpdate(float deltaTime)

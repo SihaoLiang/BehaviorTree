@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
 
 namespace BehaviorTree
 {
@@ -29,6 +26,12 @@ namespace BehaviorTree
                 Status = NodeStatus.ERROR;
 
             base.OnUpdate(deltaTime);
+        }
+
+        public override void OnReset()
+        {
+            base.OnReset();
+            ChildNode?.OnReset();
         }
     }
 }

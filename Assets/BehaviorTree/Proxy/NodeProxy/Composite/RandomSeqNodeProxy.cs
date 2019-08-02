@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using System.Collections.Generic;
 namespace BehaviorTree
 {
     /// <summary>
     /// 随机序列
     /// </summary>
-    [BehaviorNode("RandomSequence", BehaviorNodeType.Composite)]
+    [NodeProxy("RandomSequence", BehaviorNodeType.Composite)]
     public class RandomSeqNodeProxy : NodeCsProxy
     {
         protected BaseCompositeNode CompositeNode = null;
         protected List<BaseNode> Children = new List<BaseNode>();
+
         public override void OnAwake()
         {
             CompositeNode = Node as BaseCompositeNode;
